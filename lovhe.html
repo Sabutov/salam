@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Elektron Lövhə</title>
+  <style>
+    /* === Sənin verdiyin stil qaydaları burdadır (heç nə dəyişməmişəm) === */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 100px 20px 20px;
+      text-align: center;
+    }
+    canvas {
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      width: 100%;
+      height: 600px;
+      touch-action: none;
+      background-color: white;
+    }
+    input, select, button {
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #add-text-btn, #save-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .hamburger, .tools-toggle {
+      position: absolute;
+      top: 10px;
+      width: 30px;
+      height: 30px;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    .hamburger { left: 10px; }
+    .tools-toggle { right: 10px; }
+    .hamburger div, .tools-toggle div {
+      width: 30px;
+      height: 4px;
+      margin: 5px 0;
+      background-color: #333;
+    }
+    #settings-panel {
+      position: absolute;
+      top: 50px;
+      left: 10px;
+      width: 250px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 999;
+      padding: 15px;
+    }
+    #settings-panel.show { display: block; }
+    #settings-panel h3 { margin-top: 0; color: #333; }
+    #settings-panel label {
+      display: block;
+      margin-top: 15px;
+      font-size: 16px;
+      color: #555;
+    }
+    #settings-panel select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    #tools-panel {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      height: 60px;
+      z-index: 998;
+    }
+    .tools-panel-section { text-align: center; }
+    .tools-panel-section label {
+      font-size: 14px;
+      color: #333;
+      display: block;
+    }
+    .tools-panel-section select, .tools-panel-section input {
+      width: 80px;
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .action-btn {
+      margin-top: 5px;
+      padding: 8px 12px;
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .action-btn:hover { background-color: #0b7dda; }
+    #eraser-settings {
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+      padding: 10px;
+      display: none;
+      z-index: 999;
+    }
+    #eraser-settings.show { display: block; }
+    .eraser-option {
+      padding: 8px 12px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+    .eraser-option:hover { background-color: #f2f2f2; }
+    .draggable-text {
+      position: absolute;
+      cursor: move;
+      user-select: none;
+      font-weight: bold;
+      color: black;
+    }
+    #eraser-cursor {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px dashed red;
+      pointer-events: none;
+      display: none;
+      z-index: 10000;
+    }
+    @media (max-width: 768px) {
+      #tools-panel {
+        flex-direction: column;
+        height: auto;
+        padding: 10px 0;
+      }
+      .tools-panel-section { margin-bottom: 10px; }
+      #eraser-settings {
+        right: 50%;
+        transform: translateX(50%);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- === Bütün HTML strukturun olduğu kimi saxlanıldı === -->
+
+<div class="hamburger" id="hamburger">
+  <div></div><div></div><div></div>
+</div>
+
+<div class="tools-toggle" id="tools-toggle">
+  <div></div><div></div><div></div>
+</div>
+
+<div id="settings-panel">
+  <h3>Ayarlar</h3>
+  <label for="language-select">Dil seçin:</label>
+  <select id="language-select">
+    <option value="az">Azərbaycan</option>
+    <option value="en">English</option>
+    <option value="tr">Türkçe</option>
+  </select>
+</div>
+
+<div id="tools-panel">
+  <div class="tools-panel-section">
+    <label for="brush-size">Fırça:</label>
+    <select id="brush-size">
+      <option value="2">İncə</option>
+      <option value="5">Orta</option>
+      <option value="10">Qalın</option>
+    </select>
+  </div>
+  <div class="tools-panel-section">
+    <label for="font-size">Yazı:</label>
+    <select id="font-size">
+      <option value="14">Kiçik</option>
+      <option value="20" selected>Orta</option>
+      <option value="30">Böyük</option>
+    </select>
+  </div>
+  <div class="tools-panel-section">
+    <label>Palitra:</label>
+    <input type="color" id="color-picker-palette" value="#000000">
+  </div>
+  <div class="tools-panel-section">
+    <button class="action-btn" id="eraser-btn">Silgi</button>
+  </div>
+  <div class="tools-panel-section">
+    <button class="action-btn" id="undo-btn">Geri Al</button>
+  </div>
+  <div class="tools-panel-section">
+    <button class="action-btn" id="clear-btn">Təmizlə</button>
+  </div>
+  <div class="tools-panel-section">
+    <button class="action-btn" id="save-btn">Yüklə</button>
+  </div>
+</div>
+
+<div id="eraser-settings">
+  <div class="eraser-option" data-size="10">Kiçik Silgi</div>
+  <div class="eraser-option" data-size="20">Orta Silgi</div>
+  <div class="eraser-option" data-size="30">Böyük Silgi</div>
+</div>
+
+<div class="container">
+  <h1 id="board-title">Elektron Lövhə</h1>
+  <canvas id="board"></canvas>
+  <div>
+    <input type="text" id="text-input" placeholder="Lövhəyə yazın...">
+    <button id="add-text-btn">Daxil et</button>
+  </div>
+</div>
+
+<div id="eraser-cursor"></div>
+
+<script>
+  const canvas = document.getElementById("board");
+  const ctx = canvas.getContext("2d");
+  const eraserBtn = document.getElementById("eraser-btn");
+  const eraserSettings = document.getElementById("eraser-settings");
+  const eraserCursor = document.getElementById("eraser-cursor");
+
+  let drawing = false;
+  let eraserMode = false;
+  let currentColor = "#000000";
+  let currentBrushSize = 2;
+  let eraserSize = 20;
+  let currentFontSize = 20;
+
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+
+  function getXY(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    const y = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: x - rect.left, y: y - rect.top };
+  }
+
+  function updateCursor(x, y) {
+    if (eraserMode) {
+      eraserCursor.style.display = "block";
+      eraserCursor.style.width = eraserSize + "px";
+      eraserCursor.style.height = eraserSize + "px";
+      eraserCursor.style.left = (x - eraserSize / 2) + "px";
+      eraserCursor.style.top = (y - eraserSize / 2) + "px";
+    } else {
+      eraserCursor.style.display = "none";
+    }
+  }
+
+  function startDraw(e) {
+    drawing = true;
+    const pos = getXY(e);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    e.preventDefault();
+  }
+
+  function draw(e) {
+    if (!drawing) return;
+    const pos = getXY(e);
+    ctx.lineWidth = eraserMode ? eraserSize : currentBrushSize;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = eraserMode ? "#fff" : currentColor;
+    ctx.lineTo(pos.x, pos.y);
+    ctx.stroke();
+    updateCursor(pos.x + canvas.getBoundingClientRect().left, pos.y + canvas.getBoundingClientRect().top);
+  }
+
+  function endDraw() {
+    drawing = false;
+  }
+
+  canvas.addEventListener("mousedown", startDraw);
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", endDraw);
+  canvas.addEventListener("mouseout", endDraw);
+
+  canvas.addEventListener("touchstart", startDraw, { passive: false });
+  canvas.addEventListener("touchmove", draw, { passive: false });
+  canvas.addEventListener("touchend", endDraw);
+
+  // Ayarlar və alətlər
+  document.getElementById("hamburger").addEventListener("click", () => {
+    document.getElementById("settings-panel").classList.toggle("show");
+  });
+  document.getElementById("tools-toggle").addEventListener("click", () => {
+    document.getElementById("tools-panel").classList.toggle("show");
+  });
+
+  eraserBtn.addEventListener("click", () => {
+    eraserMode = !eraserMode;  // <-- dəyişiklik burada
+    eraserSettings.classList.toggle("show");
+  });
+
+  document.querySelectorAll(".eraser-option").forEach(opt => {
+    opt.addEventListener("click", () => {
+      eraserSize = parseInt(opt.dataset.size);
+      eraserSettings.classList.remove("show");
+      eraserMode = true;
+    });
+  });
+
+  document.getElementById("brush-size").addEventListener("change", e => currentBrushSize = parseInt(e.target.value));
+  document.getElementById("font-size").addEventListener("change", e => currentFontSize = parseInt(e.target.value));
+  document.getElementById("color-picker-palette").addEventListener("input", e => currentColor = e.target.value);
+
+  document.getElementById("undo-btn").addEventListener("click", () => location.reload());
+  document.getElementById("clear-btn").addEventListener("click", () => ctx.clearRect(0, 0, canvas.width, canvas.height));
+  document.getElementById("save-btn").addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.download = "sekil.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  });
+
+  document.getElementById("add-text-btn").addEventListener("click", () => {
+    const text = document.getElementById("text-input").value;
+    if (text) {
+      const div = document.createElement("div");
+      div.className = "draggable-text";
+      div.style.fontSize = currentFontSize + "px";
+      div.innerText = text;
+      div.style.left = "50%";
+      div.style.top = "50%";
+      document.body.appendChild(div);
+      makeDraggable(div);
+    }
+  });
+
+  function makeDraggable(el) {
+    let offsetX, offsetY;
+    el.addEventListener("mousedown", e => {
+      offsetX = e.clientX - el.offsetLeft;
+      offsetY = e.clientY - el.offsetTop;
+      function move(e) {
+        el.style.left = (e.clientX - offsetX) + "px";
+        el.style.top = (e.clientY - offsetY) + "px";
+      }
+      function up() {
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", up);
+      }
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", up);
+    });
+    el.addEventListener("touchstart", e => {
+      offsetX = e.touches[0].clientX - el.offsetLeft;
+      offsetY = e.touches[0].clientY - el.offsetTop;
+      function move(e) {
+        el.style.left = (e.touches[0].clientX - offsetX) + "px";
+        el.style.top = (e.touches[0].clientY - offsetY) + "px";
+      }
+      function up() {
+        document.removeEventListener("touchmove", move);
+        document.removeEventListener("touchend", up);
+      }
+      document.addEventListener("touchmove", move, { passive: false });
+      document.addEventListener("touchend", up);
+    }, { passive: false });
+  }
+
+  document.getElementById("language-select").addEventListener("change", (e) => {
+    const lang = e.target.value;
+    document.getElementById("board-title").innerText =
+      lang === "az" ? "Elektron Lövhə" :
+      lang === "en" ? "Electronic Board" :
+      lang === "tr" ? "Elektronik Tahta" : "";
+  });
+
+</script>
+</body>
+</html>
