@@ -14,137 +14,135 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      position: relative;
     }
-
     header {
       text-align: center;
       padding: 30px 20px 10px;
+      position: relative;
     }
-    header h1 { font-size: 2.4em; color: #90e0ef; margin-bottom: 10px; }
-    header p { font-size: 1.1em; color: #dceefb; }
-
-    .story-bar {
-      display: flex;
-      overflow-x: auto;
-      padding: 16px;
-      gap: 12px;
-      background-color: #012a4a;
+    header h1, header p {
+      margin-bottom: 10px;
     }
-
-    .story-item {
-      width: 75px;
-      flex-shrink: 0;
-      cursor: pointer;
-      text-align: center;
+    header h1 {
+      font-size: 2.4em;
+      color: #90e0ef;
+    }
+    header p {
+      font-size: 1.1em;
       color: #dceefb;
-      font-size: 0.85em;
+    }
+    #menuToggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #90e0ef;
+      user-select: none;
+      z-index: 1100;
+    }
+    #dropdownMenu {
+      position: absolute;
+      top: 55px;
+      right: 20px;
+      background-color: #012a4a;
+      border: 1px solid #00b4d8;
+      border-radius: 10px;
+      width: 280px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      display: none;
+      z-index: 1100;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    #dropdownMenu.show {
+      display: block;
+    }
+    .dropdown-section {
+      margin-bottom: 15px;
+    }
+    .dropdown-section:last-child {
+      margin-bottom: 0;
+    }
+    .dropdown-section h3 {
+      font-size: 1.1em;
+      color: #00b4d8;
+      margin-bottom: 10px;
       font-weight: 600;
     }
-
-    .story-circle {
-      width: 75px;
-      height: 75px;
-      border-radius: 50%;
-      border: 3px solid #00b4d8;
-      overflow: hidden;
+    .language-option {
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
       margin-bottom: 6px;
+      color: #dceefb;
+      transition: background-color 0.2s ease;
+      user-select: none;
     }
-
-    .story-circle img {
+    .language-option:hover, .language-option.active {
+      background-color: #00b4d8;
+      color: #001d3d;
+      font-weight: 700;
+    }
+    #updatesButton {
+      position: relative;
+      background-color: #0077b6;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9em;
+      user-select: none;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      text-align: left;
+    }
+    #updatesButton:hover {
+      background-color: #00b4d8;
+    }
+    #updatesBadge {
+      position: absolute;
+      top: 5px;
+      right: 12px;
+      width: 12px;
+      height: 12px;
+      background-color: red;
+      border-radius: 50%;
+      border: 2px solid #0077b6;
       pointer-events: none;
     }
-
-    .story-modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.95);
+    #updatesListDropdown {
+      margin-top: 12px;
+      list-style: disc inside;
+      color: #dceefb;
+      font-size: 0.95em;
+      max-height: 180px;
+      overflow-y: auto;
       display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      flex-direction: column;
-      padding: 20px;
+      padding-left: 20px;
     }
-
-    .story-modal.show { display: flex; }
-
-    .story-image {
-      max-width: 100%;
-      max-height: 85vh;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      object-fit: contain;
+    #updatesListDropdown.show {
+      display: block;
+    }
+    #updatesListDropdown li {
+      margin-bottom: 8px;
+    }
+    #updatesListDropdown li a {
+      color: #90e0ef;
+      text-decoration: underline;
       cursor: pointer;
     }
-
-    .progress-bars {
-      display: flex;
-      gap: 4px;
-      position: absolute;
-      top: 15px;
-      left: 10px;
-      right: 10px;
-      height: 3px;
-    }
-
-    .progress-bar {
-      flex-grow: 1;
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      background: #00b4d8;
-      height: 100%;
-      width: 0%;
-      animation-fill-mode: forwards;
-    }
-
-    @keyframes fill {
-      from { width: 0%; }
-      to { width: 100%; }
-    }
-
-    .nav-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 2.5rem;
-      color: #ffffffcc;
-      background: none;
-      border: none;
-      cursor: pointer;
-      z-index: 1010;
-      padding: 10px;
-    }
-
-    .nav-arrow.left { left: 10px; }
-    .nav-arrow.right { right: 10px; }
-    .nav-arrow:hover { color: #fff; }
-
-    #detailButton {
-      background-color: #00b4d8;
-      color: white;
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 1em;
-    }
-
     .menu {
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 30px;
       gap: 18px;
+      flex-grow: 1;
     }
-
     .btn {
       background-color: #0077b6;
       color: #fff;
@@ -156,218 +154,577 @@
       border-radius: 16px;
       font-weight: 600;
       font-size: 1.1em;
+      user-select:none;
+      transition: background-color 0.3s ease;
     }
-
     .btn:hover { background-color: #00b4d8; }
-
     footer {
       text-align: center;
       padding: 20px;
       font-size: 0.9em;
       background-color: rgba(0, 0, 0, 0.15);
     }
-
     footer a {
       color: #90e0ef;
       text-decoration: none;
+    }
+
+    /* Story Bar */
+    .story-bar {
+      display: flex;
+      overflow-x: auto;
+      padding: 16px 20px 16px 20px;
+      gap: 16px;
+      background: linear-gradient(90deg, #00294d 0%, #003566 100%);
+    }
+    .story-item {
+      width: 75px;
+      flex-shrink: 0;
+      cursor: pointer;
+      text-align: center;
+      color: #dceefb;
+      font-size: 0.85em;
+      font-weight: 600;
+      user-select: none;
+    }
+    .story-circle {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      border: 3px solid #00b4d8;
+      overflow: hidden;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #00b4d8, #0077b6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .story-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+    .story-title {
+      max-width: 75px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+      color: #90e0ef;
+    }
+
+    /* Story Modal */
+    .story-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: rgba(0, 0, 0, 0.7);
+      background-blend-mode: darken;
+      backdrop-filter: blur(20px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .story-modal.show { display: flex; }
+    .story-image {
+      max-width: 100%;
+      max-height: 85vh;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      object-fit: contain;
+      cursor: pointer;
+      z-index: 1010;
+      box-shadow: 0 0 20px #00b4d8;
+    }
+    .progress-bars {
+      display: flex;
+      gap: 4px;
+      position: absolute;
+      top: 15px;
+      left: 10px;
+      right: 10px;
+      height: 3px;
+      z-index: 1011;
+    }
+    .progress-bar {
+      flex-grow: 1;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: #00b4d8;
+      height: 100%;
+      width: 0%;
+      animation-fill-mode: forwards;
+    }
+    @keyframes fill {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+    .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2.5rem;
+      color: #ffffffcc;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1011;
+      padding: 10px;
+      user-select:none;
+    }
+    .nav-arrow.left { left: 10px; }
+    .nav-arrow.right { right: 10px; }
+    .nav-arrow:hover { color: #fff; }
+    #detailButton {
+      background-color: #00b4d8;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 1em;
+      z-index: 1011;
+      user-select:none;
     }
   </style>
 </head>
 <body>
 
-  <!-- Başlıq -->
-  <header>
-    <h1>Azərbaycan Texniki Universiteti</h1>
-    <p>Rəsmi Giriş Səhifəsi</p>
-  </header>
+<header>
+  <h1 id="headerTitle">Azərbaycan Texniki Universiteti</h1>
+  <p id="headerSubtitle">Rəsmi Giriş Səhifəsi</p>
 
-  <!-- Hekayə barı -->
-  <div class="story-bar" id="storyBar"></div>
+  <!-- 3 nöqtə menyu -->
+  <div id="menuToggle" title="Menyu">⋮</div>
 
-  <!-- Menyu -->
-  <div class="menu">
-    <a href="https://sabutov.github.io/salam./aztur.html" class="btn">🏫 Haqqımızda</a>
-    <a href="https://sabutov.github.io/salam./elaqe.html" class="btn">☎️ Əlaqə</a>
-    <a href="https://sabutov.github.io/salam./videooooo.html" class="btn">📄 Tələbə videoları</a>
-    <a href="https://sso.aztu.edu.az/" class="btn">📊 KOICA</a>
-    <a href="https://www.aztu.edu.az/az/news" class="btn">📰 Xəbərlər</a>
-    <a href="https://sabutov.github.io/salam./tezler.html" class="btn">❓ Tez-tez verilən suallar</a>
+  <div id="dropdownMenu">
+    <div class="dropdown-section" id="languageSection">
+      <h3 id="languageHeader">Dil seçimi</h3>
+      <div class="language-option" data-lang="az">Azərbaycan</div>
+      <div class="language-option" data-lang="en">English</div>
+      <div class="language-option" data-lang="ru">Русский</div>
+    </div>
+    <div class="dropdown-section" id="updatesSection">
+      <button id="updatesButton" title="Yeniliklər">🆕 <span id="updatesButtonText">Yeniliklər</span>
+        <span id="updatesBadge"></span>
+      </button>
+      <ul id="updatesListDropdown"></ul>
+    </div>
   </div>
+</header>
 
-  <!-- Altbilgi -->
-  <footer>
-    © 2025 Azərbaycan Texniki Universiteti | <a href="mailto:info@aztu.edu.az">info@aztu.edu.az</a>
-  </footer>
+<!-- Story Bar -->
+<div class="story-bar" id="storyBar"></div>
 
-  <!-- Modal -->
-  <div class="story-modal" id="storyModal" onclick="closeStory()">
-    <div class="progress-bars" id="progressBars"></div>
-    <button class="nav-arrow left" onclick="prevImage(event)">&#10094;</button>
-    <button class="nav-arrow right" onclick="nextImage(event)">&#10095;</button>
-    <img class="story-image" id="storyImage" />
-    <a href="#" id="detailButton" target="_blank">Ətraflı</a>
-  </div>
+<div class="menu">
+  <a href="https://sabutov.github.io/salam./aztur.html" class="btn" id="aboutBtn">🏫 Haqqımızda</a>
+  <a href="https://sabutov.github.io/salam./elaqe.html" class="btn" id="contactBtn">☎️ Əlaqə</a>
+  <a href="https://sabutov.github.io/salam./videooooo.html" class="btn" id="videosBtn">📄 Tələbə videoları</a>
+  <a href="https://sso.aztu.edu.az/" class="btn" id="koicaBtn">📊 KOICA</a>
+  <a href="https://www.aztu.edu.az/az/news" class="btn" id="newsBtn">📰 Xəbərlər</a>
+  <a href="https://sabutov.github.io/salam./tezler.html" class="btn" id="faqBtn">❓ Tez-tez verilən suallar</a>
+</div>
 
-  <!-- Script -->
-  <script>
-    const stories = [
-      {
-        title: "Məzuniyyət",
-        link: "https://example.com/mezun",
-        images: ["https://via.placeholder.com/800x600.png?text=Məzuniyyət"]
+<footer>
+  <span id="footerText">© 2025 AzTu Appcreator | </span>
+  <a href="mailto:info@aztu.edu.az" id="footerMail">aztuappcreator@gmail.com</a>
+</footer>
+
+<!-- Story Modal -->
+<div class="story-modal" id="storyModal" onclick="closeStory()">
+  <div class="progress-bars" id="progressBars"></div>
+  <button class="nav-arrow left" onclick="prevImage(event)">&#10094;</button>
+  <button class="nav-arrow right" onclick="nextImage(event)">&#10095;</button>
+  <img class="story-image" id="storyImage" />
+  <a href="#" id="detailButton" target="_blank">Ətraflı</a>
+</div>
+
+<script>
+  // Mətnlər üçün tərcümələr
+  const texts = {
+    az: {
+      headerTitle: "Azərbaycan Texniki Universiteti",
+      headerSubtitle: "Rəsmi Giriş Səhifəsi",
+      languageHeader: "Dil seçimi",
+      updatesButton: "Yeniliklər",
+      menu: {
+        about: "🏫 Haqqımızda",
+        contact: "☎️ Əlaqə",
+        videos: "📄 Tələbə videoları",
+        koica: "📊 KOICA",
+        news: "📰 Xəbərlər",
+        faq: "❓ Tez-tez verilən suallar"
       },
-      {
-        title: "Layihə",
-        link: "https://example.com/layihe",
-        images: [
-          "https://th.bing.com/th/id/OIP.1iDiaXoBjipTRgkMwjv7MwHaJ4?w=135&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
-          "https://via.placeholder.com/800x600.png?text=Layihə+2"
-        ]
+      footerText: "© 2025 AzTu Appcreator | ",
+      footerMail: "aztuappcreator@gmail.com",
+      updates: [
+        "Yeni story formatı əlavə edildi.",
+        "Story-lər üzərində oxlarla naviqasiya dəstəyi əlavə edildi.",
+        "Yeni dizayn",
+        { text: "📢 Rəsmi WhatsApp kanalımıza qoşulun", link: "https://whatsapp.com/channel/0029VaZYhS45a247Vr26qs09" }
+      ],
+      detailText: "Ətraflı"
+    },
+    en: {
+      headerTitle: "Azerbaijan Technical University",
+      headerSubtitle: "Official Login Page",
+      languageHeader: "Language Selection",
+      updatesButton: "Updates",
+      menu: {
+        about: "🏫 About Us",
+        contact: "☎️ Contact",
+        videos: "📄 Student Videos",
+        koica: "📊 KOICA",
+        news: "📰 News",
+        faq: "❓ Frequently Asked Questions"
+      },
+      footerText: "© 2025 AzTu Appcreator | ",
+      footerMail: "aztuappcreator@gmail.com",
+      updates: [
+        "New story format added.",
+        "Navigation arrows added on stories.",
+        "New design",
+        { text: "📢 Join our official WhatsApp channel", link: "https://whatsapp.com/channel/0029VaZYhS45a247Vr26qs09" }
+      ],
+      detailText: "Details"
+    },
+    ru: {
+      headerTitle: "Азербайджанский Технический Университет",
+      headerSubtitle: "Официальная страница входа",
+      languageHeader: "Выбор языка",
+      updatesButton: "Новости",
+      menu: {
+        about: "🏫 О нас",
+        contact: "☎️ Контакты",
+        videos: "📄 Видео студентов",
+        koica: "📊 KOICA",
+        news: "📰 Новости",
+        faq: "❓ Часто задаваемые вопросы"
+      },
+      footerText: "© 2025 AzTu Appcreator | ",
+      footerMail: "aztuappcreator@gmail.com",
+      updates: [
+        "Добавлен новый формат историй.",
+        "Добавлена навигация стрелками в историях.",
+        "Новый дизайн.",
+        { text: "📢 Присоединяйтесь к нашему официальному WhatsApp каналу", link: "https://whatsapp.com/channel/0029VaZYhS45a247Vr26qs09" }
+      ],
+      detailText: "Подробнее"
+    }
+  };
+
+  // Elementlər
+  const menuToggle = document.getElementById('menuToggle');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const languageOptions = document.querySelectorAll('.language-option');
+  const updatesButton = document.getElementById('updatesButton');
+  const updatesBadge = document.getElementById('updatesBadge');
+  const updatesListDropdown = document.getElementById('updatesListDropdown');
+  const updatesButtonText = document.getElementById('updatesButtonText');
+  const headerTitle = document.getElementById('headerTitle');
+  const headerSubtitle = document.getElementById('headerSubtitle');
+  const languageHeader = document.getElementById('languageHeader');
+  const aboutBtn = document.getElementById('aboutBtn');
+  const contactBtn = document.getElementById('contactBtn');
+  const videosBtn = document.getElementById('videosBtn');
+  const koicaBtn = document.getElementById('koicaBtn');
+  const newsBtn = document.getElementById('newsBtn');
+  const faqBtn = document.getElementById('faqBtn');
+  const footerText = document.getElementById('footerText');
+  const footerMail = document.getElementById('footerMail');
+  const storyBar = document.getElementById('storyBar');
+  const modal = document.getElementById("storyModal");
+  const img = document.getElementById("storyImage");
+  const detailButton = document.getElementById("detailButton");
+  const progressBars = document.getElementById("progressBars");
+
+  // LocalStorage açar adı
+  const STORAGE_KEY_UPDATES_READ = 'aztu_updates_read';
+
+  function loadUpdatesRead() {
+    return localStorage.getItem(STORAGE_KEY_UPDATES_READ) === 'true';
+  }
+
+  function saveUpdatesRead() {
+    localStorage.setItem(STORAGE_KEY_UPDATES_READ, 'true');
+  }
+
+  // Story idarəçiləri
+  let currentLang = 'az';
+  let updatesRead = loadUpdatesRead();
+
+  if (updatesRead) {
+    updatesBadge.style.display = 'none';
+  } else {
+    updatesBadge.style.display = 'inline-block';
+  }
+
+  let currentStoryIndex = 0;
+  let currentImageIndex = 0;
+  let timeoutId;
+  let paused = false;
+  let startTime;
+  let remainingTime = 5000;
+
+  // Menü açılıb-bağlanma
+  menuToggle.addEventListener('click', e => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle('show');
+    // Yeniliklər siyahısı bağlanır
+    updatesListDropdown.classList.remove('show');
+    if (!updatesRead) {
+      updatesBadge.style.display = 'inline-block';
+    }
+  });
+
+  document.body.addEventListener('click', () => {
+    dropdownMenu.classList.remove('show');
+    updatesListDropdown.classList.remove('show');
+  });
+
+  // Yenilikləri doldur
+  function populateUpdatesList() {
+    updatesListDropdown.innerHTML = '';
+    const updates = texts[currentLang].updates;
+    updates.forEach(item => {
+      const li = document.createElement('li');
+      if (typeof item === 'string') {
+        li.textContent = item;
+      } else if (typeof item === 'object' && item.text && item.link) {
+        const a = document.createElement('a');
+        a.textContent = item.text;
+        a.href = item.link;
+        a.target = '_blank';
+        a.rel = "noopener noreferrer";
+        a.style.color = '#90e0ef';
+        a.style.textDecoration = 'underline';
+        li.appendChild(a);
       }
-    ];
+      updatesListDropdown.appendChild(li);
+    });
+  }
 
-    const storyBar = document.getElementById('storyBar');
-    const modal = document.getElementById("storyModal");
-    const img = document.getElementById("storyImage");
-    const detailButton = document.getElementById("detailButton");
-    const progressBars = document.getElementById("progressBars");
-
-    let currentStoryIndex = 0;
-    let currentImageIndex = 0;
-    let timeoutId;
-    let paused = false;
-    let startTime;
-    let remainingTime = 5000;
-
-    function populateStoryBar() {
-      stories.forEach((story, index) => {
-        const item = document.createElement('div');
-        item.className = "story-item";
-        item.onclick = () => startStory(index);
-
-        const circle = document.createElement('div');
-        circle.className = "story-circle";
-
-        const image = document.createElement('img');
-        image.src = story.images[0];
-
-        const label = document.createElement('div');
-        label.textContent = story.title;
-
-        circle.appendChild(image);
-        item.appendChild(circle);
-        item.appendChild(label);
-        storyBar.appendChild(item);
-      });
+  // Yeniliklər düyməsinə klik
+  updatesButton.addEventListener('click', e => {
+    e.stopPropagation();
+    if (updatesListDropdown.classList.contains('show')) {
+      updatesListDropdown.classList.remove('show');
+    } else {
+      populateUpdatesList();
+      updatesListDropdown.classList.add('show');
+      updatesBadge.style.display = 'none';
+      updatesRead = true;
+      saveUpdatesRead();
     }
+  });
 
-    function startStory(index) {
-      currentStoryIndex = index;
-      currentImageIndex = 0;
-      showStory();
-    }
-
-    function showStory() {
-      const story = stories[currentStoryIndex];
-      img.src = story.images[currentImageIndex];
-      detailButton.href = story.link;
-      modal.classList.add("show");
-
-      setupProgressBars(story.images.length);
-      startProgress(currentImageIndex);
-      startTimer();
-    }
-
-    function setupProgressBars(count) {
-      progressBars.innerHTML = "";
-      for (let i = 0; i < count; i++) {
-        const bar = document.createElement('div');
-        bar.className = 'progress-bar';
-        const fill = document.createElement('div');
-        fill.className = 'progress-fill';
-        bar.appendChild(fill);
-        progressBars.appendChild(bar);
+  // Dil seçimi funksionallığı
+  languageOptions.forEach(option => {
+    option.addEventListener('click', () => {
+      const selectedLang = option.getAttribute('data-lang');
+      if (selectedLang !== currentLang) {
+        currentLang = selectedLang;
+        updateLanguage();
       }
-    }
+      dropdownMenu.classList.remove('show');
+    });
+  });
 
-    function startProgress(index) {
-      const fills = progressBars.querySelectorAll('.progress-fill');
-      fills.forEach((f, i) => {
-        f.style.animation = 'none';
-        f.style.width = i < index ? '100%' : '0%';
-      });
+  // Dil dəyişəndə mətnlərin yenilənməsi
+  function updateLanguage() {
+    const t = texts[currentLang];
+    headerTitle.textContent = t.headerTitle;
+    headerSubtitle.textContent = t.headerSubtitle;
+    languageHeader.textContent = t.languageHeader;
+    updatesButtonText.textContent = t.updatesButton;
+    aboutBtn.textContent = t.menu.about;
+    contactBtn.textContent = t.menu.contact;
+    videosBtn.textContent = t.menu.videos;
+    koicaBtn.textContent = t.menu.koica;
+    newsBtn.textContent = t.menu.news;
+    faqBtn.textContent = t.menu.faq;
+    footerText.textContent = t.footerText;
+    footerMail.textContent = t.footerMail;
 
-      setTimeout(() => {
-        fills[index].style.animation = `fill 5s linear forwards`;
-      }, 50);
-    }
-
-    function startTimer() {
-      clearTimeout(timeoutId);
-      startTime = Date.now();
-      remainingTime = 5000;
-      timeoutId = setTimeout(() => {
-        nextImage();
-      }, remainingTime);
-    }
-
-    function pauseStory() {
-      if (paused) return;
-      paused = true;
-      clearTimeout(timeoutId);
-      const elapsed = Date.now() - startTime;
-      remainingTime -= elapsed;
-    }
-
-    function resumeStory() {
-      if (!paused) return;
-      paused = false;
-      startTime = Date.now();
-      timeoutId = setTimeout(() => {
-        nextImage();
-      }, remainingTime);
-    }
-
-    function nextImage(event) {
-      if (event) event.stopPropagation();
-      currentImageIndex++;
-      const images = stories[currentStoryIndex].images;
-      if (currentImageIndex >= images.length) {
-        closeStory();
+    // Dil seçimi vizual
+    languageOptions.forEach(opt => {
+      if (opt.getAttribute('data-lang') === currentLang) {
+        opt.classList.add('active');
       } else {
-        img.src = images[currentImageIndex];
-        startProgress(currentImageIndex);
-        startTimer();
+        opt.classList.remove('active');
       }
-    }
-
-    function prevImage(event) {
-      event.stopPropagation();
-      if (currentImageIndex > 0) {
-        currentImageIndex--;
-        img.src = stories[currentStoryIndex].images[currentImageIndex];
-        startProgress(currentImageIndex);
-        startTimer();
-      }
-    }
-
-    function closeStory() {
-      modal.classList.remove("show");
-      clearTimeout(timeoutId);
-    }
-
-    img.addEventListener("click", (e) => {
-      e.stopPropagation();
-      if (paused) return;
-      nextImage();
     });
 
-    img.addEventListener("mousedown", pauseStory);
-    img.addEventListener("mouseup", resumeStory);
-    img.addEventListener("touchstart", pauseStory);
-    img.addEventListener("touchend", resumeStory);
+    // Yeniliklər siyahısını yenilə (əgər açıqdırsa)
+    if (updatesListDropdown.classList.contains('show')) {
+      populateUpdatesList();
+    }
+  }
 
-    populateStoryBar();
-  </script>
+  // Başlanğıc dil seçimi işlədirik
+  updateLanguage();
+
+  // Story bölümü üçün nümunə şəkillər və başlıqlar
+  const stories = [
+    {
+      image: "https://i.postimg.cc/MGjW5pdN/file-00000000c6486230bdedfa3a30073a2d-3.png",
+      title: "Yeniliklər",
+      detailLink: "https://www.aztu.edu.az/az/news/1",
+    },
+    {
+      image: "https://i.postimg.cc/J41F338v/IMG-20250627-172835.jpg",
+      title: "Yeni Whatsapp kanalımız",
+      detailLink: "https://www.aztu.edu.az/az/news/2",
+    },
+   
+  ];
+
+  // Story barını doldururuq
+  function renderStoryBar() {
+    storyBar.innerHTML = '';
+    stories.forEach((story, idx) => {
+      const div = document.createElement('div');
+      div.classList.add('story-item');
+      div.title = texts[currentLang].detailText;
+
+      const circle = document.createElement('div');
+      circle.classList.add('story-circle');
+
+      const img = document.createElement('img');
+      img.src = story.image;
+      img.alt = "Story Image " + (idx + 1);
+      circle.appendChild(img);
+      div.appendChild(circle);
+
+      // Yazını əlavə edirik
+      const titleDiv = document.createElement('div');
+      titleDiv.classList.add('story-title');
+      titleDiv.textContent = story.title;
+      div.appendChild(titleDiv);
+
+      storyBar.appendChild(div);
+
+      div.addEventListener('click', () => openStory(idx));
+    });
+  }
+
+  renderStoryBar();
+
+  // Story modal açar
+  function openStory(index) {
+    currentImageIndex = index;
+    showStoryImage(currentImageIndex);
+    modal.classList.add('show');
+    startProgressAnimation();
+  }
+
+  // Story modal bağlamaq
+  function closeStory() {
+    modal.classList.remove('show');
+    clearTimeout(timeoutId);
+    resetProgressBars();
+  }
+
+  // Story şəkil göstərmə
+  function showStoryImage(index) {
+    const story = stories[index];
+    img.src = story.image;
+    img.alt = "Story Image " + (index + 1);
+    detailButton.href = story.detailLink;
+    detailButton.textContent = texts[currentLang].detailText;
+    resetProgressBars();
+    highlightProgressBar(index);
+  }
+
+  // Naviqasiya funksiyaları
+  function prevImage(e) {
+    e.stopPropagation();
+    currentImageIndex--;
+    if (currentImageIndex < 0) currentImageIndex = stories.length - 1;
+    showStoryImage(currentImageIndex);
+    restartProgressAnimation();
+  }
+  function nextImage(e) {
+    e.stopPropagation();
+    currentImageIndex++;
+    if (currentImageIndex >= stories.length) currentImageIndex = 0;
+    showStoryImage(currentImageIndex);
+    restartProgressAnimation();
+  }
+
+  // Progress barları hazırlamaq
+  function createProgressBars() {
+    progressBars.innerHTML = '';
+    for (let i = 0; i < stories.length; i++) {
+      const bar = document.createElement('div');
+      bar.classList.add('progress-bar');
+      const fill = document.createElement('div');
+      fill.classList.add('progress-fill');
+      bar.appendChild(fill);
+      progressBars.appendChild(bar);
+    }
+  }
+
+  // Progress barları sıfırlamaq
+  function resetProgressBars() {
+    const fills = document.querySelectorAll('.progress-fill');
+    fills.forEach(fill => {
+      fill.style.animation = 'none';
+      fill.style.width = '0%';
+    });
+  }
+
+  // İndiki progress barı işə salmaq
+  function highlightProgressBar(index) {
+    resetProgressBars();
+    const fills = document.querySelectorAll('.progress-fill');
+    if (fills[index]) {
+      fills[index].style.animation = 'fill 5s linear forwards';
+    }
+  }
+
+  // Progress animasiyasını başlatmaq
+  function startProgressAnimation() {
+    clearTimeout(timeoutId);
+    highlightProgressBar(currentImageIndex);
+    timeoutId = setTimeout(() => {
+      nextImage(new Event('click'));
+    }, 5000);
+  }
+
+  // Progress animasiyasını restart etmək
+  function restartProgressAnimation() {
+    clearTimeout(timeoutId);
+    startProgressAnimation();
+  }
+
+  // İlkda progress barlar yaradılır
+  createProgressBars();
+
+  // Modal içində klikdə şəkili bağla (modalın fonuna klikdə bağlanır)
+  modal.addEventListener('click', closeStory);
+
+  // Modalda şəkil klikində modal bağlanmasın, növbəti şəkilə keçsin
+  img.addEventListener('click', (e) => {
+    e.stopPropagation();
+    nextImage(e);
+  });
+
+  // Detail düyməsinə klikdə modal bağlanmasın
+  detailButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+</script>
+
 </body>
 </html>
