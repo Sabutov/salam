@@ -58,9 +58,29 @@
       font-size: 0.9em;
       color: #ccc;
     }
+
+    /* Geri düyməsi */
+    .back-button {
+      background-color: #0077b6;
+      color: white;
+      padding: 10px 24px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #00b4d8;
+    }
   </style>
 </head>
 <body>
+
+  <button class="back-button" onclick="history.back()">← Geri</button>
+
   <h1>AzTU App - Haqqında</h1>
 
   <div class="info-box">
