@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AzTU | Giriş</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #003566, #001d3d);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      padding: 30px 20px 10px;
+      position: relative;
+    }
+    header h1 { font-size: 2.4em; color: #90e0ef; margin-bottom: 10px; }
+    header p { font-size: 1.1em; color: #dceefb; }
+
+    /* Hamburger icon */
+    .hamburger {
+      position: absolute;
+      top: 25px;
+      right: 20px;
+      cursor: pointer;
+      width: 30px;
+      height: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 3000;
+    }
+    .hamburger span {
+      display: block;
+      height: 4px;
+      background: #90e0ef;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+    /* Hamburger active (X icon) */
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 250px;
+      height: 100vh;
+      background-color: #012a4a;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: right 0.4s ease;
+      z-index: 2000;
+    }
+
+    .menu-overlay.active { right: 0; }
+
+    .menu-overlay h2 {
+      color: #90e0ef;
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+
+    .menu-overlay select {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+      background-color: #0077b6;
+      color: white;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      gap: 18px;
+    }
+
+    .btn {
+      background-color: #0077b6;
+      color: #fff;
+      text-decoration: none;
+      padding: 16px 26px;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 1.1em;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover { background-color: #00b4d8; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+
+    footer a {
+      color: #90e0ef;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Başlıq və Hamburger -->
+  <header>
+    <h1 id="title">Azərbaycan Texniki Universiteti</h1>
+    <p id="subtitle">Rəsmi Giriş Səhifəsi</p>
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </header>
+
+  <!-- Hamburger Menyu -->
+  <div class="menu-overlay" id="menuOverlay">
+    <h2>Dil Seçimi</h2>
+    <select id="languageSelect" onchange="changeLanguage()">
+      <option value="az">Azərbaycan dili</option>
+      <option value="en">English</option>
+      <option value="tr">Türkçe</option>
+    </select>
+  </div>
+
+  <!-- Menyu -->
+  <div class="menu">
+    <a href="https://sabutov.github.io/salam./aztur.html" class="btn" id="btn1">🏫 Haqqımızda</a>
+    <a href="https://sabutov.github.io/salam./elaqe.html" class="btn" id="btn2">☎️ Əlaqə</a>
+    <a href="https://sabutov.github.io/salam./videooooo.html" class="btn" id="btn3">📄 Tələbə videoları</a>
+    <a href="https://sso.aztu.edu.az/" class="btn" id="btn4">📊 KOICA</a>
+    <a href="https://www.aztu.edu.az/az/news" class="btn" id="btn5">📰 Xəbərlər</a>
+    <a href="https://sabutov.github.io/salam./tezler.html" class="btn" id="btn6">❓ Tez-tez verilən suallar</a>
+    <a href="https://sabutov.github.io/salam/haqqimizda.html" class="btn" id="btn6">Proqram Haqqında</a>
+  </div>
+
+  <!-- Altbilgi -->
+  <footer>
+    © 2025 AzTu Appcreator | <a href="mailto:info@aztu.edu.az">info@aztu.edu.az</a>
+  </footer>
+
+  <script>
+    const translations = {
+      az: {
+        title: "Azərbaycan Texniki Universiteti",
+        subtitle: "Rəsmi Giriş Səhifəsi",
+        btn1: "🏫 Haqqımızda",
+        btn2: "☎️ Əlaqə",
+        btn3: "📄 Tələbə videoları",
+        btn4: "📊 KOICA",
+        btn5: "📰 Xəbərlər",
+        btn6: "❓ Tez-tez verilən suallar"
+      },
+      en: {
+        title: "Azerbaijan Technical University",
+        subtitle: "Official Login Page",
+        btn1: "🏫 About Us",
+        btn2: "☎️ Contact",
+        btn3: "📄 Student Videos",
+        btn4: "📊 KOICA",
+        btn5: "📰 News",
+        btn6: "❓ FAQ"
+      },
+      tr: {
+        title: "Azerbaycan Teknik Üniversitesi",
+        subtitle: "Resmi Giriş Sayfası",
+        btn1: "🏫 Hakkımızda",
+        btn2: "☎️ İletişim",
+        btn3: "📄 Öğrenci Videoları",
+        btn4: "📊 KOICA",
+        btn5: "📰 Haberler",
+        btn6: "❓ Sık Sorulan Sorular"
+      }
+    };
+
+    const hamburger = document.getElementById('hamburger');
+    const menuOverlay = document.getElementById('menuOverlay');
+
+    function toggleMenu() {
+      menuOverlay.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    }
+
+    function changeLanguage() {
+      const lang = document.getElementById('languageSelect').value;
+      document.getElementById('title').textContent = translations[lang].title;
+      document.getElementById('subtitle').textContent = translations[lang].subtitle;
+      document.getElementById('btn1').textContent = translations[lang].btn1;
+      document.getElementById('btn2').textContent = translations[lang].btn2;
+      document.getElementById('btn3').textContent = translations[lang].btn3;
+      document.getElementById('btn4').textContent = translations[lang].btn4;
+      document.getElementById('btn5').textContent = translations[lang].btn5;
+      document.getElementById('btn6').textContent = translations[lang].btn6;
+    }
+
+    function checkConnection() {
+      if (!navigator.onLine) {
+        alert("İnternet yoxdur. Zəhmət olmasa, bağlantınızı yoxlayın.");
+        document.body.innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:center;flex-direction:column;height:100vh;text-align:center;padding:20px;color:white;background-color:#001d3d;">
+            <h1>⚠️ İnternet yoxdur</h1>
+            <p>Zəhmət olmasa, internet bağlantınızı yoxlayın və yenidən cəhd edin.</p>
+          </div>
+        `;
+      }
+    }
+
+    window.addEventListener('load', checkConnection);
+    window.addEventListener('offline', checkConnection);
+    window.addEventListener('online', () => location.reload());
+  </script>
+
+</body>
+</html>
