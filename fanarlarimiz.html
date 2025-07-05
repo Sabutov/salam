@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vizit Kart QR Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: 'Poppins', sans-serif;
+    color: #f5f5f5;
+    margin: 0;
+    min-height: 100vh;
+  }
+  .header {
+    background: #1b262c;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+  .menu-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+  .menu-icon {
+    width: 25px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .menu-icon span {
+    display: block;
+    height: 3px;
+    background-color: #ffd369;
+    border-radius: 2px;
+  }
+  .menu {
+    background: #222831;
+    position: fixed;
+    top: 0;
+    right: -270px;
+    width: 270px;
+    height: 100%;
+    padding: 30px 20px;
+    transition: right 0.3s ease;
+    box-shadow: -6px 0 25px rgba(0,0,0,0.6);
+    overflow-y: auto;
+    z-index: 1000;
+  }
+  .menu.active { right: 0; }
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 26px;
+    color: #ffd369;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  .menu h2 {
+    color: #ffd369;
+    font-size: 22px;
+    margin-bottom: 15px;
+    margin-top: 50px;
+  }
+  .saved-item {
+    background: #393e46;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: inset 2px 2px 5px #2c2c2c, inset -2px -2px 5px #4d4d4d;
+  }
+  .saved-item img {
+    width: 140px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+  #langSelect {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    background: #393e46;
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 20px;
+    box-shadow: inset 2px 2px 5px #2c2c2c, inset -2px -2px 5px #4d4d4d;
+    cursor: pointer;
+  }
+  .container {
+    padding: 40px 20px;
+    max-width: 520px;
+    margin: auto;
+  }
+  h1 {
+    text-align: center;
+    color: #ffd369;
+    margin-bottom: 30px;
+  }
+  input, button {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 18px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+  }
+  input {
+    background: #393e46;
+    color: #eee;
+    box-shadow: inset 2px 2px 5px #2c2c2c, inset -2px -2px 5px #4d4d4d;
+  }
+  input:focus { outline: none; box-shadow: 0 0 10px #ffd369; }
+  button {
+    background: linear-gradient(90deg, #ffd369, #ffb830);
+    color: #222831;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+  }
+  button:hover { background: linear-gradient(90deg, #ffe186, #ffcd50); }
+  #saveBtn {
+    background: #00adb5;
+    color: #fff;
+  }
+  #saveBtn:hover { background: #03cdd2; }
+  #qrcode {
+    text-align: center;
+    margin-top: 35px;
+  }
+  #qrcode img {
+    width: 230px;
+    height: 230px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px #ffd369;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h2 id="headerTitle">QR Generator</h2>
+  <button class="menu-btn" onclick="openMenu()" aria-label="Menu">
+    <div class="menu-icon">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </button>
+</div>
+
+<div class="menu" id="menu">
+  <button class="close-btn" onclick="closeMenu()" aria-label="Close">&times;</button>
+
+  <h2 id="menuLangLabel">Dil Seçimi</h2>
+  <select id="langSelect" onchange="changeLanguage(this.value)">
+    <option value="az">Azərbaycan</option>
+    <option value="en">English</option>
+  </select>
+
+  <h2 id="menuTitle">Yadda saxlanılanlar</h2>
+  <div id="savedList"></div>
+</div>
+
+<div class="container">
+  <h1 id="mainTitle">Vizit Kart QR Generator</h1>
+  <input type="text" id="name" placeholder="Ad Soyad *" required />
+  <input type="text" id="job" placeholder="Vəzifə" />
+  <input type="text" id="company" placeholder="Şirkət" />
+  <input type="tel" id="phone" placeholder="Telefon *" required />
+  <input type="email" id="email" placeholder="Email" />
+  <input type="text" id="address" placeholder="Ünvan" />
+  <input type="url" id="website" placeholder="Veb sayt" />
+  <input type="text" id="social" placeholder="Sosial media (məsələn, @elvin)" />
+  <button onclick="generateQRCode()" id="generateBtn">QR Kod Yarat</button>
+  <button id="saveBtn" onclick="saveQRCode()" style="display:none;">Yadda saxla</button>
+  <div id="qrcode"></div>
+</div>
+
+<script>
+const translations = {
+  az: {
+    title: "Vizit Kart QR Generator",
+    btnGenerate: "QR Kod Yarat",
+    btnSave: "Yadda saxla",
+    name: "Ad Soyad *",
+    job: "Vəzifə",
+    company: "Şirkət",
+    phone: "Telefon *",
+    email: "Email",
+    address: "Ünvan",
+    website: "Veb sayt",
+    social: "Sosial media (məsələn, @elvin)",
+    menuTitle: "Yadda saxlanılanlar",
+    menuLang: "Dil Seçimi",
+    headerTitle: "QR Generator"
+  },
+  en: {
+    title: "Business Card QR Generator",
+    btnGenerate: "Generate QR Code",
+    btnSave: "Save",
+    name: "Full Name *",
+    job: "Job Title",
+    company: "Company",
+    phone: "Phone *",
+    email: "Email",
+    address: "Address",
+    website: "Website",
+    social: "Social Media (e.g., @john)",
+    menuTitle: "Saved QR Codes",
+    menuLang: "Language",
+    headerTitle: "QR Generator"
+  }
+};
+
+function changeLanguage(lang) {
+  const t = translations[lang];
+  document.getElementById('mainTitle').textContent = t.title;
+  document.getElementById('headerTitle').textContent = t.headerTitle;
+  document.getElementById('generateBtn').textContent = t.btnGenerate;
+  document.getElementById('saveBtn').textContent = t.btnSave;
+  document.getElementById('name').placeholder = t.name;
+  document.getElementById('job').placeholder = t.job;
+  document.getElementById('company').placeholder = t.company;
+  document.getElementById('phone').placeholder = t.phone;
+  document.getElementById('email').placeholder = t.email;
+  document.getElementById('address').placeholder = t.address;
+  document.getElementById('website').placeholder = t.website;
+  document.getElementById('social').placeholder = t.social;
+  document.getElementById('menuTitle').textContent = t.menuTitle;
+  document.getElementById('menuLangLabel').textContent = t.menuLang;
+}
+
+// LocalStorage-dan dil seçimini oxu və tətbiq et
+document.addEventListener('DOMContentLoaded', () => {
+  const lang = localStorage.getItem('lang') || 'az';
+  document.getElementById('langSelect').value = lang;
+  changeLanguage(lang);
+});
+
+document.getElementById('langSelect').addEventListener('change', function() {
+  localStorage.setItem('lang', this.value);
+  changeLanguage(this.value);
+});
+
+// Hamburger menyu funksiyaları
+function openMenu() {
+  document.getElementById('menu').classList.add('active');
+  loadSavedQRCodes();
+}
+function closeMenu() {
+  document.getElementById('menu').classList.remove('active');
+}
+
+// QR kod yaratmaq funksiyası
+let qr;
+function generateQRCode() {
+  const name = document.getElementById('name').value.trim();
+  const job = document.getElementById('job').value.trim();
+  const company = document.getElementById('company').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const website = document.getElementById('website').value.trim();
+  const social = document.getElementById('social').value.trim();
+
+  if (!name || !phone) {
+    alert((localStorage.getItem('lang') === 'en') ? "Full Name and Phone are required!" : "Ad Soyad və Telefon daxil edilməlidir!");
+    return;
+  }
+
+  let vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\n`;
+  if (job) vCardData += `TITLE:${job}\n`;
+  if (company) vCardData += `ORG:${company}\n`;
+  vCardData += `TEL;TYPE=CELL:${phone}\n`;
+  if (email) vCardData += `EMAIL:${email}\n`;
+  if (address) vCardData += `ADR:;;${address}\n`;
+  if (website) vCardData += `URL:${website}\n`;
+  if (social) vCardData += `NOTE:Sosial media: ${social}\n`;
+  vCardData += `END:VCARD`;
+
+  qr = qrcode(0, 'M');
+  qr.addData(vCardData);
+  qr.make();
+
+  document.getElementById('qrcode').innerHTML = qr.createImgTag(5);
+  document.getElementById('saveBtn').style.display = 'block';
+}
+
+// QR kodu yadda saxlamaq
+function saveQRCode() {
+  const img = document.querySelector("#qrcode img");
+  if (!img) {
+    alert((localStorage.getItem('lang') === 'en') ? "Please generate a QR code first!" : "Əvvəlcə QR kod yaradın!");
+    return;
+  }
+
+  let promptText = (localStorage.getItem('lang') === 'en') ? "Enter a name to save the QR code:" : "Yadda saxlanması üçün ad verin:";
+  const name = prompt(promptText);
+  if (!name) return;
+
+  const data = {
+    name: name,
+    src: img.src,
+    time: new Date().toLocaleString()
+  };
+
+  let saved = JSON.parse(localStorage.getItem('savedQRCodes') || '[]');
+  saved.push(data);
+  localStorage.setItem('savedQRCodes', JSON.stringify(saved));
+  alert((localStorage.getItem('lang') === 'en') ? "QR code saved!" : "QR kod yadda saxlanıldı!");
+}
+
+// Yadda saxlanılan QR kodları siyahıya yüklə
+function loadSavedQRCodes() {
+  const list = document.getElementById('savedList');
+  list.innerHTML = '';
+  const saved = JSON.parse(localStorage.getItem('savedQRCodes') || '[]');
+  if (saved.length === 0) {
+    list.innerHTML = (localStorage.getItem('lang') === 'en') ? "<p>No saved QR codes.</p>" : "<p>Yadda saxlanılan QR kod yoxdur.</p>";
+    return;
+  }
+
+  saved.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'saved-item';
+    div.innerHTML = `<strong>${item.name}</strong><br><small>${item.time}</small><br><img src="${item.src}" alt="QR Code" />`;
+    list.appendChild(div);
+  });
+}
+</script>
+
+</body>
+</html>
