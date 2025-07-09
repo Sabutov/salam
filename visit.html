@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vizit Kart QR Generator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    font-family: 'Poppins', sans-serif;
+    color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 15px;
+  }
+  .container {
+    background: rgba(20, 20, 30, 0.95);
+    padding: 35px 30px;
+    border-radius: 20px;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  }
+  h1 {
+    text-align: center;
+    color: #ffcc00;
+    text-shadow: 0 0 8px #ffd700;
+    margin-bottom: 30px;
+  }
+  input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 18px;
+    border: none;
+    border-radius: 12px;
+    background: #2c2c3a;
+    color: #ddd;
+    font-size: 16px;
+    transition: all 0.3s ease;
+  }
+  input::placeholder {
+    color: #888;
+  }
+  input:focus {
+    background: #44445a;
+    outline: none;
+    box-shadow: 0 0 8px #ffcc00;
+  }
+  button {
+    width: 100%;
+    padding: 15px 0;
+    border: none;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(90deg, #ffcc00 0%, #ff9900 100%);
+    color: #222;
+    box-shadow: 0 4px 15px rgba(255, 204, 0, 0.6);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 10px;
+  }
+  button:hover {
+    background: linear-gradient(90deg, #ffdb33 0%, #ffb300 100%);
+    box-shadow: 0 6px 22px rgba(255, 204, 0, 0.8);
+  }
+  #downloadBtn {
+    margin-top: 20px;
+    background: #00a86b;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 168, 107, 0.6);
+  }
+  #downloadBtn:hover {
+    background: #00c97b;
+    box-shadow: 0 6px 20px rgba(0, 201, 123, 0.9);
+  }
+  #qrcode {
+    margin-top: 35px;
+    text-align: center;
+  }
+  #qrcode img {
+    width: 250px;
+    height: 250px;
+    border-radius: 16px;
+    box-shadow: 0 0 30px #ffcc00;
+  }
+  #errorMsg {
+    color: #ff4c4c;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  @media (max-width: 480px) {
+    .container {
+      padding: 25px 20px;
+    }
+    h1 {
+      font-size: 22px;
+    }
+    input {
+      padding: 13px;
+      font-size: 15px;
+    }
+    button {
+      font-size: 16px;
+      padding: 13px 0;
+    }
+    #qrcode img {
+      width: 200px;
+      height: 200px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Vizit Kart QR Generator</h1>
+
+  <div id="errorMsg"></div>
+
+  <input type="text" id="name" placeholder="Ad Soyad *" required />
+  <input type="text" id="job" placeholder="Vəzifə" />
+  <input type="text" id="company" placeholder="Şirkət" />
+  <input type="tel" id="phone" placeholder="Telefon *" required />
+  <input type="email" id="email" placeholder="Email" />
+  <input type="text" id="address" placeholder="Ünvan" />
+  <input type="url" id="website" placeholder="Veb sayt" />
+  <input type="text" id="social" placeholder="Sosial media (məsələn, @elvin)" />
+
+  <button id="generateBtn" onclick="generateQRCode()">QR Kod Yarat</button>
+  <button id="downloadBtn" onclick="downloadQR()" style="display:none;">QR Kod Yüklə</button>
+
+  <div id="qrcode"></div>
+</div>
+
+<script>
+  let qr;
+
+  function validateEmail(email) {
+    if (!email) return true;
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  function validateURL(url) {
+    if (!url) return true;
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function generateQRCode() {
+    const name = document.getElementById('name').value.trim();
+    const job = document.getElementById('job').value.trim();
+    const company = document.getElementById('company').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const website = document.getElementById('website').value.trim();
+    const social = document.getElementById('social').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+    errorMsg.textContent = "";
+
+    if (!name || !phone) {
+      errorMsg.textContent = "Ad Soyad və Telefon daxil edilməlidir!";
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      errorMsg.textContent = "Düzgün email ünvanı daxil edin!";
+      return;
+    }
+
+    if (!validateURL(website)) {
+      errorMsg.textContent = "Düzgün veb sayt URL-si daxil edin!";
+      return;
+    }
+
+    let vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN:${name}
+`;
+    if (job) vCardData += `TITLE:${job}\n`;
+    if (company) vCardData += `ORG:${company}\n`;
+    vCardData += `TEL;TYPE=CELL:${phone}\n`;
+    if (email) vCardData += `EMAIL;TYPE=INTERNET:${email}\n`;
+    if (address) vCardData += `ADR;TYPE=WORK:;;${address};;;;\n`;
+    if (website) vCardData += `URL:${website}\n`;
+    if (social) vCardData += `NOTE:Sosial media: ${social}\n`;
+    vCardData += `END:VCARD`;
+
+    qr = qrcode(0, 'M');
+    qr.addData(vCardData);
+    qr.make();
+
+    const qrcodeDiv = document.getElementById('qrcode');
+    qrcodeDiv.innerHTML = qr.createImgTag(5);
+
+    document.getElementById('downloadBtn').style.display = 'inline-block';
+  }
+
+  function downloadQR() {
+    const img = document.querySelector("#qrcode img");
+    if (!img) {
+      alert("Əvvəlcə QR kod yaradın!");
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = img.src;
+    link.download = 'vizit_kart_qr.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+</script>
+
+</body>
+</html>

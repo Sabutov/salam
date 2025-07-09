@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QR Kod Generator - Mobil Uyğun</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<style>
+  body {
+    background: #121212;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  input, button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px auto;
+    border-radius: 6px;
+    border: none;
+    width: 90%;
+    max-width: 300px;
+    display: block;
+  }
+  button {
+    background: #ffcc00;
+    color: black;
+    cursor: pointer;
+  }
+  #qrcode {
+    margin-top: 20px;
+    display: inline-block;
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+  }
+</style>
+</head>
+<body>
+
+<h1>QR Kod Generator</h1>
+<input type="text" id="text" placeholder="Link və ya mətn daxil edin" />
+<button onclick="generateQR()">QR Kod Yarat</button>
+
+<div id="qrcode"></div>
+
+<script>
+  function generateQR() {
+    const text = document.getElementById('text').value.trim();
+    const qrDiv = document.getElementById('qrcode');
+    qrDiv.innerHTML = ''; // əvvəlki qr kodu təmizlə
+    if (!text) {
+      alert("Zəhmət olmasa mətn və ya link daxil edin.");
+      return;
+    }
+    QRCode.toCanvas(text, { width: 200, margin: 1 }, function (error, canvas) {
+      if (error) {
+        alert('QR kod yaradılmadı: ' + error);
+        return;
+      }
+      qrDiv.appendChild(canvas);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QR Kod Generator və Oxuyucu (Link və Sayt Adı)</title>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+  body {
+    background: #121212;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    text-align: center;
+  }
+  h1 {
+    color: #ffcc00;
+  }
+  input, button {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px auto;
+    border-radius: 6px;
+    border: 1px solid #555;
+    width: 90%;
+    max-width: 300px;
+    display: block;
+    background: #1e1e1e;
+    color: #fff;
+  }
+  button {
+    background: #ffcc00;
+    color: #000;
+    cursor: pointer;
+  }
+  #reader {
+    width: 300px;
+    margin: 20px auto;
+  }
+  /* Modal */
+  #qrModalOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    padding: 15px;
+  }
+  #qrModalContent {
+    background: #222;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 90%;
+    width: 360px;
+    text-align: center;
+    box-shadow: 0 0 25px #ffcc00;
+    color: #fff;
+  }
+  #qrModalContent a {
+    color: #4fc3f7;
+    word-break: break-word;
+    font-size: 18px;
+    display: inline-block;
+    margin: 10px 0;
+    text-decoration: none;
+  }
+  #modalButtons {
+    margin-top: 15px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+  }
+  #modalButtons button {
+    flex: 1;
+    max-width: 150px;
+    background: #ffcc00;
+    color: #000;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 10px 0;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+
+<h1>QR Kod Generator və Oxuyucu</h1>
+
+<!-- QR Kod Generator -->
+<h2>QR Kod Yarat</h2>
+<input type="text" id="qrText" placeholder="Link və ya mətn daxil et">
+<button onclick="generateQRCodeModal()">QR Kod Yarat</button>
+
+<!-- QR Kod Oxu -->
+<h2>QR Kod Oxu</h2>
+<div id="reader"></div>
+
+<!-- Modal -->
+<div id="qrModalOverlay">
+  <div id="qrModalContent">
+    <canvas id="qrCanvas" width="320" height="320" style="background:#fff; margin-bottom:15px;"></canvas>
+    <div id="modalBody"></div>
+    <div id="modalButtons">
+      <button id="downloadQrBtn">Yüklə</button>
+      <button id="closeModalBtn">Bağla</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const modalOverlay = document.getElementById('qrModalOverlay');
+  const modalBody = document.getElementById('modalBody');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const downloadQrBtn = document.getElementById('downloadQrBtn');
+  const qrCanvas = document.getElementById('qrCanvas');
+
+  closeModalBtn.onclick = () => {
+    modalOverlay.style.display = 'none';
+  };
+
+  downloadQrBtn.onclick = () => {
+    const link = document.createElement('a');
+    link.download = 'qr-code.png';
+    link.href = qrCanvas.toDataURL("image/png");
+    link.click();
+  };
+
+  // Generator funksiyası
+  async function generateQRCodeModal() {
+    const text = document.getElementById('qrText').value.trim();
+    if (!text) {
+      alert("Mətn və ya link daxil et!");
+      return;
+    }
+
+    modalBody.innerHTML = "";
+
+    try {
+      await QRCode.toCanvas(qrCanvas, text, {
+        width: 320,
+        margin: 1,
+        color: { dark: '#000000', light: '#ffffff' }
+      });
+
+      if (isURL(text)) {
+        const linkEl = document.createElement('a');
+        linkEl.href = text;
+        linkEl.target = "_blank";
+        linkEl.rel = "noopener";
+        linkEl.textContent = text;
+        modalBody.appendChild(linkEl);
+      } else {
+        const p = document.createElement('p');
+        p.textContent = text;
+        modalBody.appendChild(p);
+      }
+
+      modalOverlay.style.display = 'flex';
+    } catch(err) {
+      alert("QR kod yaradılarkən səhv baş verdi: " + err);
+    }
+  }
+
+  function isURL(str) {
+    const pattern = new RegExp('^(https?:\\/\\/)?'+
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*))\\.)+[a-z]{2,}'+
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+
+      '(\\#[-a-z\\d_]*)?$','i');
+    return !!pattern.test(str);
+  }
+
+  // Linkdən domain çıxaran funksiya
+  function extractDomain(url) {
+    try {
+      const u = new URL(url.startsWith('http') ? url : 'http://' + url);
+      return u.hostname;
+    } catch {
+      return url;
+    }
+  }
+
+  // Skaner üçün funksiyalar
+  let html5QrCode;
+  function handleDecodedText(decodedText) {
+    modalBody.innerHTML = '';
+    qrCanvas.style.display = 'none'; // Skaner sonrası qr kod göstərilməsin
+
+    if (decodedText.startsWith('WIFI:')) {
+      // Wifi məlumatı göstər
+      const ssidMatch = decodedText.match(/S:([^;]*)/);
+      const passwordMatch = decodedText.match(/P:([^;]*)/);
+
+      const ssid = ssidMatch ? ssidMatch[1] : 'Təyin olunmayıb';
+      const password = passwordMatch ? passwordMatch[1] : 'Təyin olunmayıb';
+
+      modalBody.innerHTML = `
+        <p><strong>WiFi QR kodu aşkar edildi.</strong></p>
+        <p>Şəbəkə adı (SSID): <code>${ssid}</code></p>
+        <p>Şifrə: <code>${password}</code></p>
+        <p>Cihazınızı WiFi-yə qoşmaq üçün bu məlumatlardan istifadə edin.</p>
+      `;
+      downloadQrBtn.style.display = 'none'; // yüklə düyməsi gizlədilsin
+    }
+    else if (isURL(decodedText)) {
+      // Linki və domain göstər
+      const domain = extractDomain(decodedText);
+      modalBody.innerHTML = `
+        <p><strong>Link:</strong></p>
+        <a href="${decodedText}" target="_blank" rel="noopener">${decodedText}</a>
+        <p><strong>Sayt adı:</strong> ${domain}</p>
+      `;
+      downloadQrBtn.style.display = 'none'; // yüklə düyməsi gizlədilsin
+    }
+    else {
+      modalBody.textContent = decodedText;
+      downloadQrBtn.style.display = 'none'; // yüklə düyməsi gizlədilsin
+    }
+
+    modalOverlay.style.display = 'flex';
+  }
+
+  function initScanner() {
+    html5QrCode = new Html5Qrcode("reader");
+    html5QrCode.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      (decodedText) => {
+        handleDecodedText(decodedText);
+      },
+      (errorMessage) => {
+        // console.log("Oxunmur:", errorMessage);
+      }
+    ).catch(err => {
+      console.log("Başlatmaq mümkün olmadı:", err);
+    });
+  }
+
+  window.onload = () => {
+    qrCanvas.style.display = 'block'; // İlk açılışda qr kod generator üçün göstərilsin
+    downloadQrBtn.style.display = 'inline-block';
+    initScanner();
+  };
+</script>
+
+</body>
+</html>
