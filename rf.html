@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AzTU | Giriş</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #003566, #001d3d);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 420px;
+    }
+    header h1 {
+      font-size: 2.4em;
+      color: #90e0ef;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 1.1em;
+      color: #dceefb;
+    }
+    #loginContainer {
+      background: rgba(0,0,0,0.3);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      user-select: none;
+    }
+    #emailContainer {
+      margin-bottom: 20px;
+    }
+    input[type="email"] {
+      width: 90%;
+      max-width: 280px;
+      padding: 10px 15px;
+      font-size: 1.2em;
+      border-radius: 12px;
+      border: none;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    /* PIN göstəricisi qutuları */
+    #pinDisplay {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .pin-box {
+      width: 50px;
+      height: 60px;
+      border: 2px solid #90e0ef;
+      border-radius: 12px;
+      font-size: 2.5em;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      line-height: 60px;
+      user-select: none;
+      background: rgba(255 255 255 / 0.05);
+    }
+    /* Rəqəm düymələri */
+    #numPad {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 280px;
+      margin: auto;
+      gap: 15px;
+      user-select: none;
+    }
+    .num-btn {
+      width: 60px;
+      height: 60px;
+      background: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.8em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .num-btn:hover {
+      background-color: #00b4d8;
+    }
+    #backspaceBtn {
+      background: #ff6b6b !important;
+      font-weight: 700;
+      font-size: 1.3em;
+      user-select: none;
+    }
+    button:disabled {
+      cursor: not-allowed;
+      background: #555 !important;
+    }
+    #submitBtn {
+      margin-top: 20px;
+      background-color: #0077b6;
+      color: white;
+      font-weight: 600;
+      font-size: 1.2em;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      max-width: 280px;
+    }
+    #submitBtn:hover:not(:disabled) {
+      background-color: #00b4d8;
+    }
+    #errorMsg {
+      color: #ff6b6b;
+      font-weight: 600;
+      margin-top: 15px;
+      min-height: 24px;
+      min-width: 280px;
+      text-align: center;
+      user-select: none;
+    }
+    #forgotCode {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #90e0ef;
+      cursor: pointer;
+      user-select: none;
+      text-decoration: underline;
+    }
+    #forgotCode:hover {
+      color: #00b4d8;
+    }
+    #mainContent {
+      display: none;
+      width: 100%;
+      max-width: 420px;
+      background: rgba(0,0,0,0.3);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      text-align: center;
+      font-size: 1.3em;
+      font-weight: 600;
+      user-select: none;
+    }
+    /* Menü düymələri */
+    .btn {
+      background-color: #0077b6;
+      color: #fff;
+      text-decoration: none;
+      padding: 16px 26px;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 1.1em;
+      transition: background-color 0.3s ease;
+      margin: 8px auto;
+      display: block;
+      user-select: none;
+    }
+    .btn:hover { background-color: #00b4d8; }
+
+    /* Hamburger menyu */
+    #hamburgerBtn {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      z-index: 1000;
+      user-select: none;
+      display: none;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+    #hamburgerBtn span {
+      display: block;
+      height: 4px;
+      background-color: white;
+      border-radius: 2px;
+    }
+    #menuPanel {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100vh;
+      background: rgba(0,0,0,0.9);
+      box-shadow: -3px 0 10px rgba(0,0,0,0.5);
+      transition: right 0.3s ease;
+      padding: 20px;
+      user-select: none;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+    }
+    #menuPanel.active {
+      right: 0;
+    }
+    #menuPanel h2 {
+      color: #90e0ef;
+      margin-bottom: 20px;
+      font-weight: 600;
+      text-align: center;
+    }
+    #menuPanel button, #menuPanel input {
+      margin-bottom: 15px;
+      font-size: 1.1em;
+      border-radius: 12px;
+      padding: 10px;
+      border: none;
+      user-select: text;
+    }
+    #menuPanel input[type="password"], #menuPanel input[type="text"] {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #menuPanel button {
+      background-color: #0077b6;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    #menuPanel button:hover {
+      background-color: #00b4d8;
+    }
+    #changePassForm {
+      display: none;
+      flex-direction: column;
+    }
+    #changePassMsg {
+      margin-top: 10px;
+      min-height: 24px;
+      font-weight: 600;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Azərbaycan Texniki Universiteti</h1>
+    <p>Rəsmi Giriş Səhifəsi</p>
+  </header>
+
+  <div id="loginContainer">
+    <div id="emailContainer" style="display:none;">
+      <input type="email" id="emailInput" placeholder="Emailinizi daxil edin" autocomplete="off" />
+    </div>
+    <p id="loginPrompt">4 rəqəmli parol təyin edin:</p>
+
+    <div id="pinDisplay">
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+      <div class="pin-box"></div>
+    </div>
+
+    <div id="numPad">
+      <button class="num-btn">1</button>
+      <button class="num-btn">2</button>
+      <button class="num-btn">3</button>
+      <button class="num-btn">4</button>
+      <button class="num-btn">5</button>
+      <button class="num-btn">6</button>
+      <button class="num-btn">7</button>
+      <button class="num-btn">8</button>
+      <button class="num-btn">9</button>
+      <div style="width: 60px;"></div>
+      <button class="num-btn">0</button>
+      <button id="backspaceBtn" class="num-btn" aria-label="Sil">⌫</button>
+    </div>
+
+    <button id="submitBtn">Təsdiqlə</button>
+    <div id="errorMsg"></div>
+    <div id="forgotCode">Kodu unutdum?</div>
+  </div>
+
+  <div id="mainContent">
+    <p>Giriş uğurludur! Xoş gəlmisiniz.</p>
+    <div class="menu">
+      <a href="https://sabutov.github.io/salam./aztur.html" class="btn" id="btn1">🏫 Haqqımızda</a>
+      <a href="https://sabutov.github.io/salam./elaqe.html" class="btn" id="btn2">☎️ Əlaqə</a>
+      <a href="https://sabutov.github.io/salam./videooooo.html" class="btn" id="btn3">📄 Tələbə videoları</a>
+      <a href="https://sso.aztu.edu.az/" class="btn" id="btn4">📊 KOICA</a>
+      <a href="https://www.aztu.edu.az/az/news" class="btn" id="btn5">📰 Xəbərlər</a>
+      <a href="https://sabutov.github.io/salam./tezler.html" class="btn" id="btn6">❓ Tez-tez verilən suallar</a>
+      <a href="https://sabutov.github.io/salam/haqqimizda.html" class="btn" id="btn7">Proqram Haqqında</a>
+    </div>
+    <button id="logoutBtn" style="margin-top: 20px; background:#ff6b6b; border:none; border-radius:12px; color:white; padding:12px 25px; font-weight:600; cursor:pointer;">Çıxış</button>
+  </div>
+
+  <!-- Hamburger menyu düyməsi -->
+  <div id="hamburgerBtn" aria-label="Menu" role="button" tabindex="0" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <!-- Hamburger menyu paneli -->
+  <div id="menuPanel" role="dialog" aria-modal="true" aria-hidden="true">
+    <h2>Menu</h2>
+    <button id="changePassBtn">Parolu dəyiş</button>
+    <button id="closeMenuBtn">Bağla</button>
+    <button id="logoutBtnMenu" style="background:#ff6b6b; margin-top: auto;">Çıxış</button>
+
+    <!-- Parol dəyişmə forması -->
+    <form id="changePassForm" autocomplete="off" novalidate>
+      <input type="password" id="oldPass" placeholder="Köhnə PIN" maxlength="4" inputmode="numeric" pattern="\d{4}" required />
+      <input type="password" id="newPass1" placeholder="Yeni PIN" maxlength="4" inputmode="numeric" pattern="\d{4}" required />
+      <input type="password" id="newPass2" placeholder="Yeni PIN (təkrar)" maxlength="4" inputmode="numeric" pattern="\d{4}" required />
+      <button type="button" id="savePassBtn">Yadda saxla</button>
+      <div id="changePassMsg"></div>
+    </form>
+  </div>
+
+<script>
+  const PIN_STORAGE_KEY = 'aztu_app_pin';
+  const ATTEMPTS_STORAGE_KEY = 'aztu_app_attempts';
+  const BLOCK_TIME_STORAGE_KEY = 'aztu_app_block_time';
+  const EMAIL_STORAGE_KEY = 'aztu_app_email';
+  const LOGGED_IN_KEY = 'aztu_logged_in';
+
+  const loginContainer = document.getElementById('loginContainer');
+  const pinBoxes = document.querySelectorAll('.pin-box');
+  const numButtons = document.querySelectorAll('.num-btn');
+  const backspaceBtn = document.getElementById('backspaceBtn');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const loginPrompt = document.getElementById('loginPrompt');
+  const mainContent = document.getElementById('mainContent');
+  const emailContainer = document.getElementById('emailContainer');
+  const emailInput = document.getElementById('emailInput');
+  const forgotCode = document.getElementById('forgotCode');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // Hamburger menyu elementləri
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const menuPanel = document.getElementById('menuPanel');
+  const changePassBtn = document.getElementById('changePassBtn');
+  const closeMenuBtn = document.getElementById('closeMenuBtn');
+  const logoutBtnMenu = document.getElementById('logoutBtnMenu');
+  const changePassForm = document.getElementById('changePassForm');
+  const oldPass = document.getElementById('oldPass');
+  const newPass1 = document.getElementById('newPass1');
+  const newPass2 = document.getElementById('newPass2');
+  const savePassBtn = document.getElementById('savePassBtn');
+  const changePassMsg = document.getElementById('changePassMsg');
+
+  let pin = [];
+  let isSettingPin = false;
+  let isResettingCode = false;
+
+  function getStoredPin() {
+    return localStorage.getItem(PIN_STORAGE_KEY);
+  }
+  function setStoredPin(pinCode) {
+    localStorage.setItem(PIN_STORAGE_KEY, pinCode);
+  }
+  function getAttempts() {
+    const att = localStorage.getItem(ATTEMPTS_STORAGE_KEY);
+    return att ? parseInt(att) : 3;
+  }
+  function setAttempts(value) {
+    localStorage.setItem(ATTEMPTS_STORAGE_KEY, value);
+  }
+  function getBlockTime() {
+    const t = localStorage.getItem(BLOCK_TIME_STORAGE_KEY);
+    return t ? parseInt(t) : 0;
+  }
+  function setBlockTime(timestamp) {
+    localStorage.setItem(BLOCK_TIME_STORAGE_KEY, timestamp);
+  }
+  function getStoredEmail() {
+    return localStorage.getItem(EMAIL_STORAGE_KEY);
+  }
+  function setStoredEmail(email) {
+    localStorage.setItem(EMAIL_STORAGE_KEY, email);
+  }
+
+  function updatePinDisplay() {
+    pinBoxes.forEach((box, idx) => {
+      box.textContent = pin[idx] ? '●' : '';
+    });
+  }
+
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  function setNewPin(pinCode) {
+    setStoredPin(pinCode);
+    setAttempts(3);
+    setBlockTime(0);
+    loginPrompt.textContent = 'Parol təyin edildi. İndi daxil olun:';
+    submitBtn.textContent = 'Daxil ol';
+    pin = [];
+    updatePinDisplay();
+    errorMsg.textContent = '';
+    isSettingPin = false;
+    emailContainer.style.display = 'none';
+    emailInput.value = '';
+  }
+
+  function showMainContent() {
+    loginContainer.style.display = 'none';
+    mainContent.style.display = 'block';
+    hamburgerBtn.style.display = 'flex';
+  }
+
+  function activateBlock() {
+    errorMsg.textContent = 'Cəhd limiti bitdi. 30 saniyə gözləyin...';
+    submitBtn.disabled = true;
+    numButtons.forEach(btn => btn.disabled = true);
+    backspaceBtn.disabled = true;
+    pin = [];
+    updatePinDisplay();
+    startBlockCountdown();
+  }
+
+  function startBlockCountdown() {
+    const interval = setInterval(() => {
+      const remaining = Math.floor((getBlockTime() - Date.now()) / 1000);
+
+      if (remaining > 0) {
+        errorMsg.textContent = `Cəhd limiti bitdi. ${remaining} saniyə gözləyin...`;
+      } else {
+        clearInterval(interval);
+        errorMsg.textContent = '';
+        submitBtn.disabled = false;
+        numButtons.forEach(btn => btn.disabled = false);
+        backspaceBtn.disabled = false;
+        setAttempts(3);
+        setBlockTime(0);
+      }
+    }, 1000);
+  }
+
+  function checkBlockStatus() {
+    const blockTime = getBlockTime();
+    if (blockTime && Date.now() < blockTime) {
+      activateBlock();
+      return true;
+    }
+    return false;
+  }
+
+  forgotCode.addEventListener('click', () => {
+    if (checkBlockStatus()) return;
+
+    isResettingCode = true;
+    errorMsg.textContent = '';
+    pin = [];
+    updatePinDisplay();
+
+    loginPrompt.textContent = 'Emailinizi daxil edin:';
+    emailContainer.style.display = 'block';
+    emailInput.focus();
+
+    submitBtn.textContent = 'Göndər';
+
+    document.getElementById('numPad').style.display = 'none';
+    document.getElementById('pinDisplay').style.display = 'none';
+  });
+
+  submitBtn.addEventListener('click', () => {
+    if (checkBlockStatus()) return;
+
+    if (isResettingCode) {
+      const emailVal = emailInput.value.trim();
+      const storedEmail = getStoredEmail();
+
+      if (!validateEmail(emailVal)) {
+        errorMsg.textContent = 'Zəhmət olmasa, düzgün email daxil edin.';
+        return;
+      }
+      if (storedEmail !== emailVal) {
+        errorMsg.textContent = 'Email qeydiyyatda yoxdur.';
+        return;
+      }
+
+      const newPin = Math.floor(1000 + Math.random() * 9000).toString();
+      setStoredPin(newPin);
+      setAttempts(3);
+      setBlockTime(0);
+      errorMsg.textContent = `Yeni kodunuz: ${newPin} (Real tətbiqdə emailə göndərilir)`;
+
+      isResettingCode = false;
+      pin = [];
+      updatePinDisplay();
+
+      loginPrompt.textContent = 'Parolunuzu daxil edin:';
+      emailContainer.style.display = 'none';
+      emailInput.value = '';
+      submitBtn.textContent = 'Daxil ol';
+      document.getElementById('numPad').style.display = 'flex';
+      document.getElementById('pinDisplay').style.display = 'flex';
+
+      return;
+    }
+
+    if (!getStoredPin()) {
+      const emailVal = emailInput.value.trim();
+
+      if (!validateEmail(emailVal)) {
+        errorMsg.textContent = 'Zəhmət olmasa, düzgün email daxil edin.';
+        return;
+      }
+      if (pin.length !== 4) {
+        errorMsg.textContent = 'Zəhmət olmasa, 4 rəqəmli parol daxil edin.';
+        return;
+      }
+      setStoredEmail(emailVal);
+      setNewPin(pin.join(''));
+      return;
+    }
+
+    if (pin.length !== 4) {
+      errorMsg.textContent = 'Zəhmət olmasa, 4 rəqəm daxil edin.';
+      return;
+    }
+
+    const pinStr = pin.join('');
+    const storedPin = getStoredPin();
+
+    let attemptsLeft = getAttempts();
+
+    if (pinStr === storedPin) {
+      localStorage.setItem(LOGGED_IN_KEY, 'true');
+      showMainContent();
+    } else {
+      attemptsLeft -= 1;
+      setAttempts(attemptsLeft);
+
+      if (attemptsLeft === 0) {
+        setBlockTime(Date.now() + 30000);
+        activateBlock();
+      } else if (attemptsLeft > 0) {
+        errorMsg.textContent = `Parol səhvdir. Qalan cəhd sayı: ${attemptsLeft}`;
+        pin = [];
+        updatePinDisplay();
+      }
+    }
+  });
+
+  numButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (pin.length < 4 && !submitBtn.disabled) {
+        pin.push(btn.textContent);
+        updatePinDisplay();
+      }
+    });
+  });
+
+  backspaceBtn.addEventListener('click', () => {
+    if (pin.length > 0 && !submitBtn.disabled) {
+      pin.pop();
+      updatePinDisplay();
+    }
+  });
+
+  logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem(LOGGED_IN_KEY);
+    window.location.reload();
+  });
+
+  // Hamburger menyu funksionallığı
+
+  hamburgerBtn.addEventListener('click', () => {
+    if (menuPanel.classList.contains('active')) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  });
+
+  closeMenuBtn.addEventListener('click', () => {
+    closeMenu();
+  });
+
+  logoutBtnMenu.addEventListener('click', () => {
+    localStorage.removeItem(LOGGED_IN_KEY);
+    window.location.reload();
+  });
+
+  function openMenu() {
+    menuPanel.classList.add('active');
+    menuPanel.setAttribute('aria-hidden', 'false');
+    hamburgerBtn.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenu() {
+    menuPanel.classList.remove('active');
+    menuPanel.setAttribute('aria-hidden', 'true');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    hideChangePassForm();
+    clearChangePassFields();
+    changePassMsg.textContent = '';
+  }
+
+  // Parol dəyişmə formu açıb bağlamaq
+  changePassBtn.addEventListener('click', () => {
+    if (changePassForm.style.display === 'flex') {
+      hideChangePassForm();
+    } else {
+      showChangePassForm();
+    }
+  });
+
+  function showChangePassForm() {
+    changePassForm.style.display = 'flex';
+    oldPass.focus();
+  }
+  function hideChangePassForm() {
+    changePassForm.style.display = 'none';
+  }
+
+  function clearChangePassFields() {
+    oldPass.value = '';
+    newPass1.value = '';
+    newPass2.value = '';
+  }
+
+  // Yeni PIN yadda saxlamaq
+  savePassBtn.addEventListener('click', () => {
+    changePassMsg.textContent = '';
+
+    const oldPin = oldPass.value.trim();
+    const newPinA = newPass1.value.trim();
+    const newPinB = newPass2.value.trim();
+
+    const storedPin = getStoredPin();
+
+    if (oldPin.length !== 4 || newPinA.length !== 4 || newPinB.length !== 4) {
+      changePassMsg.style.color = '#ff6b6b';
+      changePassMsg.textContent = 'Bütün PINlər 4 rəqəm olmalıdır.';
+      return;
+    }
+    if (oldPin !== storedPin) {
+      changePassMsg.style.color = '#ff6b6b';
+      changePassMsg.textContent = 'Köhnə PIN səhvdir.';
+      return;
+    }
+    if (newPinA !== newPinB) {
+      changePassMsg.style.color = '#ff6b6b';
+      changePassMsg.textContent = 'Yeni PINlər uyğun gəlmir.';
+      return;
+    }
+    if (newPinA === oldPin) {
+      changePassMsg.style.color = '#ff6b6b';
+      changePassMsg.textContent = 'Yeni PIN köhnə PIN-dən fərqli olmalıdır.';
+      return;
+    }
+
+    setStoredPin(newPinA);
+    changePassMsg.style.color = '#90e0ef';
+    changePassMsg.textContent = 'Parol uğurla dəyişdirildi!';
+    clearChangePassFields();
+    hideChangePassForm();
+  });
+
+  window.addEventListener('load', () => {
+    if (localStorage.getItem(LOGGED_IN_KEY) === 'true') {
+      showMainContent();
+      return;
+    }
+
+    const storedPin = getStoredPin();
+
+    if (!storedPin) {
+      isSettingPin = true;
+      emailContainer.style.display = 'block';
+      emailInput.focus();
+      loginPrompt.textContent = 'Emailinizi daxil edin və 4 rəqəmli parol təyin edin:';
+      submitBtn.textContent = 'Təsdiqlə';
+    } else {
+      loginPrompt.textContent = 'Parolunuzu daxil edin:';
+      submitBtn.textContent = 'Daxil ol';
+      emailContainer.style.display = 'none';
+    }
+
+    if (checkBlockStatus()) {
+      // blok aktivdirsə düymələr avtomatik deaktivdir
+    } else {
+      pin = [];
+      updatePinDisplay();
+      submitBtn.disabled = false;
+      numButtons.forEach(btn => btn.disabled = false);
+      backspaceBtn.disabled = false;
+      document.getElementById('numPad').style.display = 'flex';
+      document.getElementById('pinDisplay').style.display = 'flex';
+    }
+  });
+</script>
+
+</body>
+</html>
