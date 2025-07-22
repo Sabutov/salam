@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AzTU | Giriş</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #003566, #001d3d);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      text-align: center;
+      padding: 30px 20px 10px;
+      position: relative;
+    }
+    header h1 { font-size: 2.4em; color: #90e0ef; margin-bottom: 10px; }
+    header p { font-size: 1.1em; color: #dceefb; }
+
+    .hamburger {
+      position: absolute;
+      top: 25px;
+      right: 20px;
+      cursor: pointer;
+      width: 30px;
+      height: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 10000;
+    }
+    .hamburger span {
+      display: block;
+      height: 4px;
+      background: #90e0ef;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .menu-overlay {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 250px;
+      height: 100vh;
+      background-color: #012a4a;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: right 0.4s ease;
+      z-index: 9999;
+    }
+    .menu-overlay.active { right: 0; }
+
+    .menu-overlay h2 {
+      color: #90e0ef;
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+
+    .menu-overlay select {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+      background-color: #0077b6;
+      color: white;
+    }
+
+    .menu {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      gap: 18px;
+    }
+
+    .btn {
+      background-color: #0077b6;
+      color: #fff;
+      text-decoration: none;
+      padding: 16px 26px;
+      width: 90%;
+      max-width: 320px;
+      text-align: center;
+      border-radius: 16px;
+      font-weight: 600;
+      font-size: 1.1em;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover { background-color: #00b4d8; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+      background-color: rgba(0, 0, 0, 0.15);
+      margin-top: auto;
+    }
+
+    footer a {
+      color: #90e0ef;
+      text-decoration: none;
+    }
+
+    #passwordPanel {
+      max-width: 360px;
+      margin: 40px auto;
+      background: #012a4a;
+      padding: 25px 30px;
+      border-radius: 14px;
+      box-shadow: 0 0 10px #0077b6cc;
+      color: white;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    #passwordPanel h2 {
+      margin-bottom: 10px;
+    }
+
+    #pinInputs {
+      display: flex;
+      gap: 12px;
+    }
+    #pinInputs input {
+      width: 45px;
+      height: 55px;
+      font-size: 2.2em;
+      text-align: center;
+      border-radius: 10px;
+      border: 2px solid #0077b6;
+      background: #003566;
+      color: white;
+      outline: none;
+    }
+
+    #pinInputs input:focus {
+      border-color: #00b4d8;
+      background: #004a8e;
+    }
+
+    #numpad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    #numpad button {
+      padding: 18px;
+      font-size: 1.4em;
+      border-radius: 10px;
+      border: none;
+      background-color: #0077b6;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #numpad button:hover {
+      background-color: #00b4d8;
+    }
+
+    #submitPasswordBtn {
+      margin-top: 20px;
+      padding: 15px 0;
+      font-size: 1.2em;
+      font-weight: 700;
+      width: 100%;
+      max-width: 320px;
+      border-radius: 14px;
+      border: none;
+      background-color: #90e0ef;
+      color: #001d3d;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #submitPasswordBtn:hover {
+      background-color: #00b4d8;
+      color: white;
+    }
+
+    /* Forgot Modal Styles */
+    #forgotModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+    }
+
+    #forgotModal .modal-content {
+      background: #012a4a;
+      padding: 25px 30px;
+      border-radius: 14px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 0 12px #0077b6cc;
+    }
+
+    #forgotPasswordBtn {
+      background: none;
+      border: none;
+      color: #90e0ef;
+      text-decoration: underline;
+      font-size: 0.9em;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER və DİL SEÇİMİ -->
+  <header>
+    <h1 id="title">Azərbaycan Texniki Universiteti</h1>
+    <p id="subtitle">Rəsmi Giriş Səhifəsi</p>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </header>
+
+  <div class="menu-overlay" id="menuOverlay">
+    <h2>Dil Seçimi</h2>
+    <select id="languageSelect" onchange="changeLanguage()">
+      <option value="az">Azərbaycan dili</option>
+      <option value="en">English</option>
+      <option value="tr">Türkçe</option>
+    </select>
+  </div>
+
+  <!-- ƏSAS MENYU -->
+  <div class="menu" id="mainMenu">
+    <a href="https://sabutov.github.io/salam./aztur.html" class="btn" id="btn1">🏫 Haqqımızda</a>
+    <a href="https://sabutov.github.io/salam./elaqe.html" class="btn" id="btn2">☎️ Əlaqə</a>
+    <a href="https://sabutov.github.io/salam./videooooo.html" class="btn" id="btn3">📄 Tələbə videoları</a>
+    <a href="https://sso.aztu.edu.az/" class="btn" id="btn4">📊 KOICA</a>
+    <a href="https://www.aztu.edu.az/az/news" class="btn" id="btn5">📰 Xəbərlər</a>
+    <a href="https://sabutov.github.io/salam./tezler.html" class="btn" id="btn6">❓ Tez-tez verilən suallar</a>
+    <a href="https://sabutov.github.io/salam/haqqimizda.html" class="btn" id="btn7">Proqram Haqqında</a>
+  </div>
+
+  <!-- PAROL PANELİ -->
+  <div id="passwordPanel">
+    <h2 id="passwordTitle">Parol daxil edin</h2>
+    <input type="email" id="userEmail" placeholder="Emailinizi daxil edin" style="width: 100%; padding: 10px; font-size: 1em; border-radius: 8px; border: 1px solid #0077b6; background-color: #003566; color: white;" />
+    <div id="pinInputs">
+      <input type="password" maxlength="1" readonly />
+      <input type="password" maxlength="1" readonly />
+      <input type="password" maxlength="1" readonly />
+      <input type="password" maxlength="1" readonly />
+    </div>
+    <div id="numpad">
+      <button onclick="handleNumClick('1')">1</button>
+      <button onclick="handleNumClick('2')">2</button>
+      <button onclick="handleNumClick('3')">3</button>
+      <button onclick="handleNumClick('4')">4</button>
+      <button onclick="handleNumClick('5')">5</button>
+      <button onclick="handleNumClick('6')">6</button>
+      <button onclick="handleNumClick('7')">7</button>
+      <button onclick="handleNumClick('8')">8</button>
+      <button onclick="handleNumClick('9')">9</button>
+      <button onclick="handleBackspace()">←</button>
+      <button onclick="handleNumClick('0')">0</button>
+      <button onclick="clearInputs()">C</button>
+    </div>
+    <button id="submitPasswordBtn">Təsdiqlə</button>
+    <button id="forgotPasswordBtn">Parolu unutdun?</button>
+  </div>
+
+  <!-- FORGOT PASSWORD MODALI -->
+  <div id="forgotModal">
+    <div class="modal-content">
+      <h3>Emailinizi daxil edin</h3>
+      <input type="email" id="forgotEmailInput" placeholder="example@aztu.edu.az" style="width: 100%; padding: 12px; font-size: 1em; border-radius: 8px; border: 1px solid #0077b6; background-color: #003566; color: white; margin-bottom: 20px;" />
+      <div style="display: flex; justify-content: space-between; gap: 10px;">
+        <button id="cancelForgotBtn">Ləğv et</button>
+        <button id="confirmForgotBtn">Təsdiqlə</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 AzTu Appcreator | <a href="mailto:info@aztu.edu.az">info@aztu.edu.az</a>
+  </footer>
+
+  <!-- SCRIPT -->
+  <script>
+    const translations = {
+      az: {
+        title: "Azərbaycan Texniki Universiteti",
+        subtitle: "Rəsmi Giriş Səhifəsi",
+        btn1: "🏫 Haqqımızda",
+        btn2: "☎️ Əlaqə",
+        btn3: "📄 Tələbə videoları",
+        btn4: "📊 KOICA",
+        btn5: "📰 Xəbərlər",
+        btn6: "❓ Tez-tez verilən suallar",
+        btn7: "Proqram Haqqında",
+        passwordEnter: "Parol daxil edin",
+        passwordSet: "Yeni parol təyin edin",
+        btnSubmit: "Təsdiqlə",
+        alertPinSet: "Parol uğurla təyin edildi!",
+        alertPinWrong: "Yanlış parol.",
+        alertPinLength: "Zəhmət olmasa, 4 rəqəmli parol daxil edin.",
+        alertPinMismatch: "Parollar uyğun gəlmədi. Yenidən cəhd edin."
+      },
+      en: {
+        title: "Azerbaijan Technical University",
+        subtitle: "Official Login Page",
+        btn1: "🏫 About Us",
+        btn2: "☎️ Contact",
+        btn3: "📄 Student Videos",
+        btn4: "📊 KOICA",
+        btn5: "📰 News",
+        btn6: "❓ FAQ",
+        btn7: "About the Program",
+        passwordEnter: "Enter your password",
+        passwordSet: "Set a new password",
+        btnSubmit: "Submit",
+        alertPinSet: "Password successfully set!",
+        alertPinWrong: "Incorrect password.",
+        alertPinLength: "Please enter a 4-digit password.",
+        alertPinMismatch: "Passwords do not match. Try again."
+      },
+      tr: {
+        title: "Azerbaycan Teknik Üniversitesi",
+        subtitle: "Resmi Giriş Sayfası",
+        btn1: "🏫 Hakkımızda",
+        btn2: "☎️ İletişim",
+        btn3: "📄 Öğrenci Videoları",
+        btn4: "📊 KOICA",
+        btn5: "📰 Haberler",
+        btn6: "❓ Sıkça Sorulan Sorular",
+        btn7: "Program Hakkında",
+        passwordEnter: "Şifreyi girin",
+        passwordSet: "Yeni şifre belirleyin",
+        btnSubmit: "Onayla",
+        alertPinSet: "Şifre başarıyla ayarlandı!",
+        alertPinWrong: "Yanlış şifre.",
+        alertPinLength: "Lütfen 4 haneli şifre girin.",
+        alertPinMismatch: "Şifreler eşleşmiyor. Tekrar deneyin."
+      }
+    };
+
+    const hamburger = document.getElementById('hamburger');
+    const menuOverlay = document.getElementById('menuOverlay');
+    const languageSelect = document.getElementById('languageSelect');
+    const mainMenu = document.getElementById('mainMenu');
+    const passwordPanel = document.getElementById('passwordPanel');
+    const passwordTitle = document.getElementById('passwordTitle');
+    const submitPasswordBtn = document.getElementById('submitPasswordBtn');
+    const pinInputs = [...document.querySelectorAll('#pinInputs input')];
+    const emailInput = document.getElementById('userEmail');
+
+    const forgotPasswordBtn = document.getElementById('forgotPasswordBtn');
+    const forgotModal = document.getElementById('forgotModal');
+    const forgotEmailInput = document.getElementById('forgotEmailInput');
+    const cancelForgotBtn = document.getElementById('cancelForgotBtn');
+    const confirmForgotBtn = document.getElementById('confirmForgotBtn');
+
+    let currentLang = localStorage.getItem('aztu_lang') || 'az';
+    languageSelect.value = currentLang;
+    let inputIndex = 0;
+    let isSettingNewPin = false;
+    let tempPin = null;
+
+    function toggleMenu() {
+      menuOverlay.classList.toggle('active');
+      hamburger.classList.toggle('active');
+    }
+
+    function changeLanguage() {
+      currentLang = languageSelect.value;
+      localStorage.setItem('aztu_lang', currentLang);
+
+      const tr = translations[currentLang];
+      if (!tr) return;
+
+      document.getElementById('title').textContent = tr.title;
+      document.getElementById('subtitle').textContent = tr.subtitle;
+      for (let i = 1; i <= 7; i++) {
+        document.getElementById('btn' + i).textContent = tr['btn' + i];
+      }
+      passwordTitle.textContent = isSettingNewPin ? tr.passwordSet : tr.passwordEnter;
+      submitPasswordBtn.textContent = tr.btnSubmit;
+    }
+
+    function showPasswordPanel() {
+      passwordPanel.style.display = 'flex';
+      mainMenu.style.display = 'none';
+      clearInputs();
+      passwordTitle.textContent = isSettingNewPin
+        ? translations[currentLang].passwordSet
+        : translations[currentLang].passwordEnter;
+    }
+
+    function showMainMenu() {
+      passwordPanel.style.display = 'none';
+      mainMenu.style.display = 'flex';
+    }
+
+    function handleNumClick(num) {
+      if (inputIndex < 4) {
+        pinInputs[inputIndex].value = num;
+        inputIndex++;
+      }
+    }
+
+    function handleBackspace() {
+      if (inputIndex > 0) {
+        inputIndex--;
+        pinInputs[inputIndex].value = '';
+      }
+    }
+
+    function clearInputs() {
+      pinInputs.forEach(input => input.value = '');
+      inputIndex = 0;
+    }
+
+    function encodePin(pin) {
+      return btoa(pin);
+    }
+
+    function decodePin(pinEncoded) {
+      try { return atob(pinEncoded); }
+      catch { return null; }
+    }
+
+    function submitPassword() {
+      const pin = pinInputs.map(i => i.value).join('');
+      const tr = translations[currentLang];
+      const savedPinEncoded = localStorage.getItem('aztu_pin');
+
+      if (pin.length !== 4) return alert(tr.alertPinLength);
+
+      if (!savedPinEncoded) {
+        if (!isSettingNewPin) {
+          isSettingNewPin = true;
+          tempPin = pin;
+          alert(tr.passwordSet + " (Təkrar daxil edin)");
+          clearInputs();
+        } else {
+          if (pin === tempPin) {
+            const email = emailInput.value.trim().toLowerCase();
+            if (!email || !email.includes('@')) {
+              alert("Zəhmət olmasa düzgün email daxil edin.");
+              return;
+            }
+            localStorage.setItem('aztu_email', email);
+            localStorage.setItem('aztu_pin', encodePin(pin));
+            isSettingNewPin = false;
+            alert(tr.alertPinSet);
+            showMainMenu();
+          } else {
+            alert(tr.alertPinMismatch);
+            isSettingNewPin = false;
+            clearInputs();
+          }
+        }
+      } else {
+        if (pin === decodePin(savedPinEncoded)) {
+          showMainMenu();
+        } else {
+          alert(tr.alertPinWrong);
+          clearInputs();
+        }
+      }
+    }
+
+    submitPasswordBtn.addEventListener('click', submitPassword);
+    hamburger.addEventListener('click', toggleMenu);
+
+    forgotPasswordBtn.addEventListener('click', () => {
+      forgotEmailInput.value = '';
+      forgotModal.style.display = 'flex';
+    });
+
+    cancelForgotBtn.addEventListener('click', () => {
+      forgotModal.style.display = 'none';
+    });
+
+    confirmForgotBtn.addEventListener('click', () => {
+      const enteredEmail = forgotEmailInput.value.trim().toLowerCase();
+      const savedEmail = localStorage.getItem('aztu_email');
+
+      if (!enteredEmail || !enteredEmail.includes('@')) {
+        alert("Zəhmət olmasa düzgün email daxil edin.");
+        return;
+      }
+
+      if (enteredEmail === savedEmail) {
+        localStorage.removeItem('aztu_pin');
+        alert("Parol sıfırlandı. Zəhmət olmasa yeni parol təyin edin.");
+        isSettingNewPin = false;
+        tempPin = null;
+        showPasswordPanel();
+        emailInput.style.display = 'block';
+        forgotModal.style.display = 'none';
+      } else {
+        alert("Email uyğun gəlmədi. Yenidən cəhd edin.");
+      }
+    });
+
+    window.addEventListener('load', () => {
+      changeLanguage();
+      const savedPin = localStorage.getItem('aztu_pin');
+      const savedEmail = localStorage.getItem('aztu_email');
+
+      isSettingNewPin = false;
+      showPasswordPanel(); // Parol HƏR ZAMAN istənir
+
+      if (!savedPin || !savedEmail) {
+        emailInput.style.display = 'block';
+      } else {
+        emailInput.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
