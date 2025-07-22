@@ -6,7 +6,7 @@
   <title>AzTU | Giriş</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #003566, #001d3d);
@@ -235,11 +235,11 @@
       font-size: 0.9em;
       cursor: pointer;
     }
+
   </style>
 </head>
 <body>
-  <!-- HEADER və DİL SEÇİMİ -->
-  <header>
+   <header>
     <h1 id="title">Azərbaycan Texniki Universiteti</h1>
     <p id="subtitle">Rəsmi Giriş Səhifəsi</p>
     <div class="hamburger" id="hamburger">
@@ -310,8 +310,6 @@
   <footer>
     © 2025 AzTu Appcreator | <a href="mailto:info@aztu.edu.az">info@aztu.edu.az</a>
   </footer>
-
-  <!-- SCRIPT -->
   <script>
     const translations = {
       az: {
@@ -478,6 +476,7 @@
             localStorage.setItem('aztu_email', email);
             localStorage.setItem('aztu_pin', encodePin(pin));
             isSettingNewPin = false;
+            sessionStorage.setItem('authenticated', 'true');
             alert(tr.alertPinSet);
             showMainMenu();
           } else {
@@ -488,6 +487,7 @@
         }
       } else {
         if (pin === decodePin(savedPinEncoded)) {
+          sessionStorage.setItem('authenticated', 'true');
           showMainMenu();
         } else {
           alert(tr.alertPinWrong);
@@ -531,17 +531,27 @@
     });
 
     window.addEventListener('load', () => {
+      // Refresh olunduqda sessionStorage silinir ki, parol yenidən istənsin
+      const isReload = performance.getEntriesByType("navigation")[0]?.type === "reload";
+      if (isReload) {
+        sessionStorage.removeItem('authenticated');
+      }
+
       changeLanguage();
       const savedPin = localStorage.getItem('aztu_pin');
       const savedEmail = localStorage.getItem('aztu_email');
 
       isSettingNewPin = false;
-      showPasswordPanel(); // Parol HƏR ZAMAN istənir
 
-      if (!savedPin || !savedEmail) {
-        emailInput.style.display = 'block';
+      if (!sessionStorage.getItem('authenticated')) {
+        showPasswordPanel();
+        if (!savedPin || !savedEmail) {
+          emailInput.style.display = 'block';
+        } else {
+          emailInput.style.display = 'none';
+        }
       } else {
-        emailInput.style.display = 'none';
+        showMainMenu();
       }
     });
   </script>
